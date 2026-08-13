@@ -27,23 +27,22 @@ export default function SignUp() {
 
   if (sent) {
     return (
-      <AuthCard title="Check your email">
-        <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-          We sent a confirmation link to <span className="font-medium">{email}</span>. Click it, then come back and
-          sign in.
+      <AuthCard title="Squad HQ">
+        <p style={{ fontSize: 13.5, color: "#6b5a70", lineHeight: 1.6, textAlign: "center" }}>
+          We sent a confirmation link to <b>{email}</b>. Click it, then come back and sign in.
         </p>
       </AuthCard>
     );
   }
 
   return (
-    <AuthCard title="Create your account" subtitle="Sign up for Squad HQ">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <AuthCard title="Squad HQ">
+      <form onSubmit={handleSubmit}>
         <AuthInput
           label="Email"
           type="email"
           required
-          placeholder="you@example.com"
+          placeholder="you@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -52,21 +51,17 @@ export default function SignUp() {
           type="password"
           required
           minLength={6}
-          placeholder="At least 6 characters"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         {error && <AuthError message={error} />}
-        <AuthButton type="submit" loading={loading} loadingText="Signing up…">
-          Sign up
+        <AuthButton type="submit" loading={loading} loadingText="Creating account…">
+          Create account
         </AuthButton>
       </form>
-
-      <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
-        Already have an account?{" "}
-        <a href="/sign-in" className="font-medium text-[#37003c] hover:underline dark:text-purple-300">
-          Sign in
-        </a>
+      <p className="fine-print">
+        Free — no card required. Already have an account? <a href="/sign-in">Sign in</a>.
       </p>
     </AuthCard>
   );

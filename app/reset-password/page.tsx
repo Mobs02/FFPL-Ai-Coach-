@@ -17,8 +17,6 @@ export default function ResetPassword() {
     setError(null);
     setLoading(true);
     const supabase = getSupabaseBrowserClient();
-    // Supabase's client-side SDK exchanges the reset link's token for a
-    // session automatically on this page load.
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
     if (error) {
@@ -31,21 +29,21 @@ export default function ResetPassword() {
 
   if (done) {
     return (
-      <AuthCard title="Password updated">
-        <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">Redirecting to sign in…</p>
+      <AuthCard title="Squad HQ">
+        <p style={{ fontSize: 13.5, color: "#6b5a70", textAlign: "center" }}>Password updated — redirecting…</p>
       </AuthCard>
     );
   }
 
   return (
-    <AuthCard title="Set a new password">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <AuthCard title="Squad HQ">
+      <form onSubmit={handleSubmit}>
         <AuthInput
           label="New password"
           type="password"
           required
           minLength={6}
-          placeholder="At least 6 characters"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

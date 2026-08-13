@@ -22,23 +22,22 @@ export default function ForgotPassword() {
 
   if (sent) {
     return (
-      <AuthCard title="Check your email">
-        <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-          If an account exists for <span className="font-medium">{email}</span>, a password reset link is on its
-          way.
+      <AuthCard title="Squad HQ">
+        <p style={{ fontSize: 13.5, color: "#6b5a70", lineHeight: 1.6, textAlign: "center" }}>
+          If an account exists for <b>{email}</b>, a password reset link is on its way.
         </p>
       </AuthCard>
     );
   }
 
   return (
-    <AuthCard title="Reset password" subtitle="We'll email you a reset link">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <AuthCard title="Squad HQ">
+      <form onSubmit={handleSubmit}>
         <AuthInput
           label="Email"
           type="email"
           required
-          placeholder="you@example.com"
+          placeholder="you@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -46,6 +45,9 @@ export default function ForgotPassword() {
           Send reset link
         </AuthButton>
       </form>
+      <p className="fine-print">
+        <a href="/sign-in">Back to sign in</a>
+      </p>
     </AuthCard>
   );
 }

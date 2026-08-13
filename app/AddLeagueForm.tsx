@@ -29,23 +29,20 @@ export function AddLeagueForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <input
-        type="number"
-        required
-        placeholder="Add a league ID"
-        value={leagueId}
-        onChange={(e) => setLeagueId(e.target.value)}
-        className="flex-1 rounded-lg border border-black/10 p-2 text-sm dark:border-white/10 dark:bg-zinc-900"
-      />
-      <button
-        type="submit"
-        disabled={loading}
-        className="rounded-lg bg-[#37003c] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-      >
-        {loading ? "Adding…" : "Add"}
-      </button>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%" }}>
+      <div style={{ display: "flex", gap: 8 }}>
+        <input
+          type="number"
+          required
+          placeholder="Add a league ID"
+          value={leagueId}
+          onChange={(e) => setLeagueId(e.target.value)}
+        />
+        <button type="submit" className="btn-secondary" disabled={loading}>
+          {loading ? "Adding…" : "Add"}
+        </button>
+      </div>
+      {error && <p className="error-text" style={{ marginTop: 0 }}>{error}</p>}
     </form>
   );
 }

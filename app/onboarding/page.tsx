@@ -30,25 +30,25 @@ export default function Onboarding() {
   }
 
   return (
-    <AuthCard title="Link your FPL team">
-      <p className="mb-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
-        Log into fantasy.premierleague.com → Points — the number in the URL
-        (<code className="text-xs">.../entry/1234567/event/7</code>) is your manager ID.
-      </p>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <AuthCard title="Add your FPL team" stepTag="Step 2 of 2">
+      <form onSubmit={handleSubmit}>
         <AuthInput
-          label="FPL manager ID"
+          label="Your FPL manager ID"
           type="number"
           required
-          placeholder="1234567"
+          placeholder="e.g. 1234567"
           value={fplManagerId}
           onChange={(e) => setFplManagerId(e.target.value)}
         />
         {error && <AuthError message={error} />}
         <AuthButton type="submit" loading={loading} loadingText="Checking…">
-          Continue
+          Save and continue
         </AuthButton>
       </form>
+      <div className="helper-box">
+        <b>Where to find this:</b> log into fantasy.premierleague.com, open &quot;Points,&quot; and look at the URL — the
+        number in <code>/entry/1234567/</code> is your manager ID. No FPL password needed, this number is public.
+      </div>
     </AuthCard>
   );
 }
