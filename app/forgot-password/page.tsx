@@ -1,48 +1,51 @@
 "use client";
 
 import { useState } from "react";
+import { AuthCard, AuthInput, AuthButton } from "../AuthCard";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
     await fetch("/api/auth/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
+    setLoading(false);
     setSent(true);
   }
 
   if (sent) {
     return (
-      <main className="mx-auto max-w-sm p-8">
-        <h1 className="mb-4 text-2xl font-bold text-[#37003c] dark:text-purple-200">Check your email</h1>
-        <p className="text-zinc-600 dark:text-zinc-400">
-          If an account exists for {email}, a password reset link is on its way.
+      <AuthCard title="Check your email">
+        <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+          If an account exists for <span className="font-medium">{email}</span>, a password reset link is on its
+          way.
         </p>
-      </main>
+      </AuthCard>
     );
   }
 
   return (
-    <main className="mx-auto max-w-sm p-8">
-      <h1 className="mb-6 text-2xl font-bold text-[#37003c] dark:text-purple-200">Reset password</h1>
+    <AuthCard title="Reset password" subtitle="We'll email you a reset link">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
+        <AuthInput
+          label="Email"
           type="email"
           required
-          placeholder="Email"
+          placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-lg border border-black/10 p-3 dark:border-white/10 dark:bg-zinc-900"
         />
-        <button type="submit" className="rounded-lg bg-[#37003c] p-3 font-medium text-white">
+        <AuthButton type="submit" loading={loading} loadingText="Sending…">
           Send reset link
-        </button>
+        </AuthButton>
       </form>
-    </main>
+    </AuthCard>
   );
 }

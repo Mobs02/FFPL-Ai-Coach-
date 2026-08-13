@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AuthCard, AuthInput, AuthError, AuthButton } from "../AuthCard";
 
 export default function Onboarding() {
   const router = useRouter();
@@ -29,30 +30,25 @@ export default function Onboarding() {
   }
 
   return (
-    <main className="mx-auto max-w-sm p-8">
-      <h1 className="mb-2 text-2xl font-bold text-[#37003c] dark:text-purple-200">Link your FPL team</h1>
-      <p className="mb-6 text-sm text-zinc-600 dark:text-zinc-400">
+    <AuthCard title="Link your FPL team">
+      <p className="mb-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
         Log into fantasy.premierleague.com → Points — the number in the URL
-        (<code>.../entry/1234567/event/7</code>) is your manager ID.
+        (<code className="text-xs">.../entry/1234567/event/7</code>) is your manager ID.
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
+        <AuthInput
+          label="FPL manager ID"
           type="number"
           required
-          placeholder="FPL manager ID"
+          placeholder="1234567"
           value={fplManagerId}
           onChange={(e) => setFplManagerId(e.target.value)}
-          className="rounded-lg border border-black/10 p-3 dark:border-white/10 dark:bg-zinc-900"
         />
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-lg bg-[#37003c] p-3 font-medium text-white disabled:opacity-50"
-        >
-          {loading ? "Checking…" : "Continue"}
-        </button>
+        {error && <AuthError message={error} />}
+        <AuthButton type="submit" loading={loading} loadingText="Checking…">
+          Continue
+        </AuthButton>
       </form>
-    </main>
+    </AuthCard>
   );
 }

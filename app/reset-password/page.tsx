@@ -3,20 +3,24 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
+import { AuthCard, AuthInput, AuthError, AuthButton } from "../AuthCard";
 
 export default function ResetPassword() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setLoading(true);
     const supabase = getSupabaseBrowserClient();
     // Supabase's client-side SDK exchanges the reset link's token for a
     // session automatically on this page load.
     const { error } = await supabase.auth.updateUser({ password });
+    setLoading(false);
     if (error) {
       setError(error.message);
       return;
@@ -27,30 +31,29 @@ export default function ResetPassword() {
 
   if (done) {
     return (
-      <main className="mx-auto max-w-sm p-8">
-        <p className="text-zinc-600 dark:text-zinc-400">Password updated — redirecting to sign in.</p>
-      </main>
+      <AuthCard title="Password updated">
+        <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">Redirecting to sign in…</p>
+      </AuthCard>
     );
   }
 
   return (
-    <main className="mx-auto max-w-sm p-8">
-      <h1 className="mb-6 text-2xl font-bold text-[#37003c] dark:text-purple-200">Set a new password</h1>
+    <AuthCard title="Set a new password">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
+        <AuthInput
+          label="New password"
           type="password"
           required
           minLength={6}
-          placeholder="New password"
+          placeholder="At least 6 characters"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-lg border border-black/10 p-3 dark:border-white/10 dark:bg-zinc-900"
         />
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" className="rounded-lg bg-[#37003c] p-3 font-medium text-white">
+        {error && <AuthError message={error} />}
+        <AuthButton type="submit" loading={loading} loadingText="Updating…">
           Update password
-        </button>
+        </AuthButton>
       </form>
-    </main>
+    </AuthCard>
   );
 }
