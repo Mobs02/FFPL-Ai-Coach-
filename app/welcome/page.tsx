@@ -30,17 +30,32 @@ const FEATURES = [
   {
     icon: "◆",
     title: "AI transfer suggestions",
-    body: "Budget-aware recommendations that account for your actual selling prices, bank, and free transfers — not just generic \"who's in form\" advice.",
-  },
-  {
-    icon: "▲",
-    title: "Live dashboard, always current",
-    body: "Your squad, points, and league standings update automatically on a schedule — no more refreshing the official site during a live gameweek.",
+    body: "Budget-aware recommendations that account for your actual selling prices, bank, and free transfers — with the exact cost math shown, and a clear -4 warning if a pick would cost you a hit.",
   },
   {
     icon: "●",
     title: "Under-the-radar picks",
     body: "Get pointed to in-form players almost nobody else has picked yet — a real edge over the crowd, not just a popular \"safe\" swap.",
+  },
+  {
+    icon: "✦",
+    title: "Template radar",
+    body: "See the widely-owned, in-form players you're missing — the picks everyone else already has that are quietly costing you rank.",
+  },
+  {
+    icon: "▣",
+    title: "Rival scout",
+    body: "See exactly how far behind the manager above you in each mini-league you are, and whether this week's suggestions would help close the gap.",
+  },
+  {
+    icon: "♛",
+    title: "Captain & chip calls",
+    body: "A justified captain and vice-captain pick every gameweek, plus chip guidance that never suggests one you've already used.",
+  },
+  {
+    icon: "▲",
+    title: "Live dashboard, always current",
+    body: "Your squad, points, and league standings update automatically on a schedule — no more refreshing the official site during a live gameweek.",
   },
 ];
 
