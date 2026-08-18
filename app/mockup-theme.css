@@ -122,7 +122,7 @@ header.app-header {
 }
 
 /* ---- pitch card ---- */
-.pitch-card { background: var(--cream); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(55,0,60,0.12); }
+.pitch-card { background: var(--cream); border-radius: 14px; overflow: hidden; box-shadow: 0 16px 36px rgba(55,0,60,0.14); }
 .pitch-card-header { padding: 14px 18px 10px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 15px; color: var(--purple); }
 .pitch {
   background: repeating-linear-gradient(to bottom, var(--pitch-1) 0px, var(--pitch-1) 40px, var(--pitch-2) 40px, var(--pitch-2) 80px);
@@ -165,7 +165,7 @@ header.app-header {
 .bench-row { display: flex; gap: 16px; flex-wrap: wrap; }
 
 /* ---- sidebar cards ---- */
-.side-card { background: var(--cream); border-radius: 14px; padding: 16px 18px; box-shadow: 0 1px 3px rgba(55,0,60,0.12); }
+.side-card { background: var(--cream); border-radius: 14px; padding: 16px 18px; box-shadow: 0 16px 36px rgba(55,0,60,0.14); }
 .side-card + .side-card, .ai-card + .side-card, .side-card + .ai-card { margin-top: 14px; }
 .side-card h3 { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; color: var(--purple); margin: 0 0 10px; }
 .league-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -176,7 +176,7 @@ header.app-header {
 .league-note { font-size: 12px; color: #8a7a8f; margin: 8px 0 0; }
 .trend-svg { width: 100%; height: 70px; display: block; margin-top: 4px; }
 
-.ai-card { background: linear-gradient(135deg, #fff6e8, #fff); border: 1px solid #f2d9a8; border-radius: 14px; padding: 16px 18px; }
+.ai-card { background: linear-gradient(135deg, #fff6e8, #fff); border: 1px solid #f2d9a8; border-radius: 14px; padding: 16px 18px; box-shadow: 0 16px 36px rgba(55,0,60,0.14); }
 .ai-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--gold); color: var(--gold-ink); font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
 .ai-card p { font-size: 13px; line-height: 1.55; margin: 0 0 8px; color: #4a3a1a; }
 .ai-card p:last-child { margin-bottom: 0; }
@@ -310,7 +310,7 @@ footer.app-footer { text-align: center; font-size: 11.5px; color: #9a8a9e; paddi
 .error-text { color: var(--danger); background: var(--danger-bg); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; margin-top: 14px; }
 
 /* ---- settings ---- */
-.section { background: var(--cream); margin: 16px 20px 0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(55,0,60,0.1); }
+.section { background: var(--cream); margin: 16px 20px 0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 16px 36px rgba(55,0,60,0.14); }
 .section h2 { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; color: var(--purple); margin: 0 0 14px; }
 .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-top: 1px solid #f0eaf1; gap: 12px; }
 .setting-row:first-of-type { border-top: none; padding-top: 0; }
