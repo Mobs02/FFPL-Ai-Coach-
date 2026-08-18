@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { SettingsClient } from "./SettingsClient";
+import { AppNav } from "../AppNav";
+import { SiteFooter } from "../SiteFooter";
 
 export default async function Settings() {
   const supabase = await getSupabaseServerClient();
@@ -34,23 +36,22 @@ export default async function Settings() {
   }));
 
   return (
-    <div className="wrap-narrow">
-      <header className="app-header">
-        <div className="navrow">
-          <img src="/logo-icon.png" alt="" className="brand-mark" />
-          <div style={{ fontFamily: "var(--font-poppins)", fontWeight: 600, fontSize: 16 }}>Settings</div>
-          <a className="back-link" href="/dashboard">
-            ← Back to dashboard
-          </a>
+    <>
+      <AppNav active="settings" />
+      <main className="app-page">
+        <div className="wrap-narrow">
+          <h1 style={{ fontFamily: "var(--font-poppins)", fontSize: 22, fontWeight: 700, color: "var(--purple)", margin: "0 0 22px" }}>
+            Settings
+          </h1>
+          <SettingsClient
+            email={user.email ?? ""}
+            fplManagerId={manager.fpl_manager_id}
+            leagues={leagues}
+            emailRemindersEnabled={manager.email_reminders_enabled}
+          />
         </div>
-      </header>
-
-      <SettingsClient
-        email={user.email ?? ""}
-        fplManagerId={manager.fpl_manager_id}
-        leagues={leagues}
-        emailRemindersEnabled={manager.email_reminders_enabled}
-      />
-    </div>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

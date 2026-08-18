@@ -20,13 +20,24 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #f2eef4;
+  background: var(--cream);
   color: var(--ink);
 }
 
 .wrap { max-width: 980px; margin: 0 auto; }
 .wrap-narrow { max-width: 560px; margin: 0 auto; padding-bottom: 32px; }
 .wrap-auth { max-width: 720px; margin: 0 auto; }
+
+/* ---- authenticated app pages (dashboard, settings) — full-width white
+   nav (AppNav) sitting above this, same light background treatment as the
+   auth pages instead of the old boxed purple-header-on-gray look. */
+.app-page {
+  min-height: calc(100vh - 67px);
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0, 255, 133, 0.06), transparent 70%),
+    var(--cream);
+  padding: 32px 24px 48px;
+}
 
 /* ---- header / nav ---- */
 header.app-header {
@@ -73,6 +84,18 @@ header.app-header {
 }
 .status-chip.fresh { color: var(--green); border-color: rgba(0,255,133,0.3); }
 .status-chip.stale { color: #ff8a80; border-color: rgba(255,138,128,0.35); background: rgba(255,138,128,0.1); }
+
+/* Light-theme counterpart to .status-chip, for the info badges on the new
+   white app-page header (dashboard/settings) instead of the dark purple one. */
+.info-chip {
+  font-size: 12px; font-weight: 500; color: var(--purple);
+  background: rgba(55,0,60,0.05);
+  border: 1px solid rgba(55,0,60,0.12);
+  padding: 6px 14px; border-radius: 999px;
+  white-space: nowrap;
+}
+.info-chip.fresh { color: #0a8a58; border-color: rgba(0,255,133,0.35); background: rgba(0,255,133,0.08); }
+.info-chip.stale { color: #c1554a; border-color: rgba(193,85,74,0.3); background: rgba(193,85,74,0.08); }
 
 .provisional-tag {
   font-size: 10px; font-weight: 600; color: var(--gold-ink);

@@ -6,6 +6,7 @@ import { RegenerateButton } from "../RegenerateButton";
 import { SiteFooter } from "../SiteFooter";
 import { PlayerPhoto } from "../PlayerPhoto";
 import { AiFeedback } from "../AiFeedback";
+import { AppNav } from "../AppNav";
 
 type SquadPlayer = {
   name: string;
@@ -216,34 +217,29 @@ export default async function Dashboard() {
   const bench = (team.squad ?? []).filter((p) => p.isBench);
 
   return (
-    <div className="wrap">
-      <header className="app-header">
-        <div className="navrow">
-          <div className="brand">
-            <img src="/logo-icon.png" alt="" className="brand-mark" />
-            SquadScout AI
+    <>
+      <AppNav active="dashboard" />
+      <main className="app-page">
+        <div className="wrap">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 22 }}>
+            <h1 style={{ fontFamily: "var(--font-poppins)", fontSize: 22, fontWeight: 700, color: "var(--purple)", margin: 0 }}>
+              Dashboard
+            </h1>
+            {!team.error && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <span className="info-chip">Gameweek {team.gameweek}</span>
+                <span className="info-chip">{team.freeTransfers} free transfer{team.freeTransfers === 1 ? "" : "s"}</span>
+                {(() => {
+                  const { label, stale } = dataFreshness(team.capturedAt);
+                  return (
+                    <span className={`info-chip ${stale ? "stale" : "fresh"}`}>
+                      {stale ? "⚠ " : ""}Updated {label}
+                    </span>
+                  );
+                })()}
+              </div>
+            )}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {!team.error && <div className="gw-pill">Gameweek {team.gameweek}</div>}
-            <a href="/settings" className="status-chip" style={{ textDecoration: "none" }}>
-              Settings
-            </a>
-          </div>
-        </div>
-        {!team.error && (
-          <div className="status-row">
-            <span className="status-chip">{team.freeTransfers} free transfer{team.freeTransfers === 1 ? "" : "s"}</span>
-            {(() => {
-              const { label, stale } = dataFreshness(team.capturedAt);
-              return (
-                <span className={`status-chip ${stale ? "stale" : "fresh"}`}>
-                  {stale ? "⚠ " : ""}Updated {label}
-                </span>
-              );
-            })()}
-          </div>
-        )}
-      </header>
 
       {team.error ? (
         <div className="section">
@@ -345,9 +341,10 @@ export default async function Dashboard() {
         <div className="add-league-row">
           <AddLeagueForm />
         </div>
-      </div>
-
+          </div>
+        </div>
+      </main>
       <SiteFooter />
-    </div>
+    </>
   );
 }
