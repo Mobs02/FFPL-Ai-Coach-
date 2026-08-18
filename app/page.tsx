@@ -203,15 +203,19 @@ export default async function Dashboard() {
             <img src="/logo-icon.png" alt="" className="brand-mark" />
             SquadScout AI
           </div>
-          {!team.error && <div className="gw-pill">Gameweek {team.gameweek}</div>}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {!team.error && <div className="gw-pill">Gameweek {team.gameweek}</div>}
+            <a href="/settings" className="status-chip" style={{ textDecoration: "none" }}>
+              Settings
+            </a>
+          </div>
         </div>
-        <div className="status-row">
-          {!team.error && <span className="status-chip">{team.freeTransfers} free transfer{team.freeTransfers === 1 ? "" : "s"}</span>}
-          {!team.error && <span className="status-chip fresh">Updated {minutesAgo(team.capturedAt)}m ago</span>}
-          <a href="/settings" className="status-chip" style={{ textDecoration: "none", marginLeft: "auto" }}>
-            Settings
-          </a>
-        </div>
+        {!team.error && (
+          <div className="status-row">
+            <span className="status-chip">{team.freeTransfers} free transfer{team.freeTransfers === 1 ? "" : "s"}</span>
+            <span className="status-chip fresh">Updated {minutesAgo(team.capturedAt)}m ago</span>
+          </div>
+        )}
       </header>
 
       {team.error ? (
