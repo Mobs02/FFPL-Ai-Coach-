@@ -5,6 +5,8 @@ import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { AuthCard, AuthInput, AuthError, AuthButton } from "../AuthCard";
 
 export default function SignUp() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +18,17 @@ export default function SignUp() {
     setError(null);
     setLoading(true);
     const supabase = getSupabaseBrowserClient();
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          full_name: `${firstName} ${lastName}`.trim(),
+        },
+      },
+    });
     setLoading(false);
     if (error) {
       setError(error.message);
@@ -38,6 +50,28 @@ export default function SignUp() {
   return (
     <AuthCard heading="Create your account">
       <form onSubmit={handleSubmit}>
+        <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ flex: 1 }}>
+            <AuthInput
+              label="First name"
+              type="text"
+              required
+              placeholder="Alex"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <AuthInput
+              label="Last name"
+              type="text"
+              required
+              placeholder="Morgan"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+        </div>
         <AuthInput
           label="Email"
           type="email"
