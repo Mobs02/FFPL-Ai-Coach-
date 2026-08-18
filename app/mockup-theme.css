@@ -115,7 +115,8 @@ header.app-header {
 .stat-value { font-family: 'Poppins', sans-serif; color: var(--cream); font-size: 26px; font-weight: 600; margin: 0; }
 
 /* ---- content grid ---- */
-.content { display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px; padding: 20px; }
+.content { display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px; padding: 20px; align-items: start; }
+.ai-section { margin: 0 20px 16px; }
 @media (max-width: 720px) {
   .content { grid-template-columns: 1fr; }
   .stats-strip { grid-template-columns: 1fr; gap: 10px; }
@@ -181,6 +182,8 @@ header.app-header {
 .ai-card p { font-size: 13px; line-height: 1.55; margin: 0 0 8px; color: #4a3a1a; }
 .ai-card p:last-child { margin-bottom: 0; }
 .ai-card b { color: var(--purple); }
+.ai-disclaimer { font-size: 11.5px; color: #8a7a52; border-top: 1px solid #f2d9a8; padding-top: 10px; margin-top: 4px; }
+.ai-disclaimer a { color: var(--purple); font-weight: 600; text-decoration: underline; }
 .ai-feedback {
   display: flex; align-items: center; gap: 8px;
   margin-top: 12px; padding-top: 10px;

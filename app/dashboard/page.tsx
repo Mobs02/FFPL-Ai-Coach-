@@ -126,6 +126,29 @@ function LeagueCard({ league, totalPoints }: { league: LeagueEntry; totalPoints:
   );
 }
 
+const AI_TAG_LABELS: Record<string, string> = {
+  TRANSFER: "Transfer option",
+  BENCH: "Bench check",
+  DIFFERENTIAL: "Differential watch (low-ownership pick)",
+  TEMPLATE: "Template check (a player most managers have)",
+  RIVAL: "Rival watch",
+  CHIP: "Chip check",
+  CAPTAIN: "Captain & vice",
+};
+
+function AiParagraph({ line }: { line: string }) {
+  const match = line.match(/^([A-Z]+):\s*(.+)$/);
+  const label = match ? AI_TAG_LABELS[match[1]] : null;
+  if (label) {
+    return (
+      <p>
+        <b>{label}:</b> {match![2]}
+      </p>
+    );
+  }
+  return <p>{line}</p>;
+}
+
 function AiCard({
   id,
   headline,
@@ -147,12 +170,19 @@ function AiCard({
         </p>
       )}
       {paragraphs.length > 0 ? (
-        paragraphs.map((line, i) => <p key={i}>{line}</p>)
+        paragraphs.map((line, i) => <AiParagraph key={i} line={line} />)
       ) : (
         <p>No recommendation yet — click below to generate one for this gameweek.</p>
       )}
       <RegenerateButton hasRecommendation={paragraphs.length > 0} />
       {id != null && paragraphs.length > 0 && <AiFeedback recommendationId={id} initialFeedback={feedback} />}
+      <p className="ai-disclaimer">
+        Make these moves yourself on the{" "}
+        <a href="https://fantasy.premierleague.com/" target="_blank" rel="noopener noreferrer">
+          official FPL site
+        </a>{" "}
+        — SquadScout AI is advisory only and never touches your team.
+      </p>
     </div>
   );
 }
@@ -313,13 +343,16 @@ export default async function Dashboard() {
                 <LeagueCard key={league.leagueId} league={league} totalPoints={team.totalPoints} />
               ))}
               <RankTrend history={history.history ?? []} />
-              <AiCard
-                id={recommendation?.id ?? null}
-                headline={recommendation?.headline ?? null}
-                content={recommendation?.content ?? null}
-                feedback={recommendation?.feedback ?? null}
-              />
             </div>
+          </div>
+
+          <div className="ai-section">
+            <AiCard
+              id={recommendation?.id ?? null}
+              headline={recommendation?.headline ?? null}
+              content={recommendation?.content ?? null}
+              feedback={recommendation?.feedback ?? null}
+            />
           </div>
         </>
       )}

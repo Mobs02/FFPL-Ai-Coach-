@@ -53,10 +53,26 @@ export async function generateAiInsight({
       position: player.element_type,
       sellingPrice: calculateSellingPrice(purchasePrice, player.now_cost) / 10,
       form: player.form,
+      expectedGoalInvolvements: player.expected_goal_involvements, // underlying xG+xA — a steadier signal than form alone
       ownership: Number(player.selected_by_percent), // Template Radar — % of managers who own this player
       isBench: pick.position > 11, // picks 1–11 are the starting XI, 12–15 are the bench
-      upcomingFixtures: getUpcomingFixtures(fixtures, player.team, gameweek), // next 3 gameweeks, difficulty rated
+      upcomingFixtures: getUpcomingFixtures(bootstrap, fixtures, player.team, gameweek), // next 3 gameweeks, difficulty rated
       lastSeasonPoints: lastSeasonById.get(player.id) ?? null,
+      // FPL's own fitness status: "a" = available, "d" = doubtful, "i" = injured,
+      // "s" = suspended, "u" = unavailable. chanceOfPlaying is null when fully fit.
+      fitnessStatus: player.status,
+      chanceOfPlaying: player.chance_of_playing_next_round,
+      news: player.news || null,
+      minutes: player.minutes,
+      starts: player.starts, // low starts relative to gameweeks played so far = rotation risk
+      // 1 = first-choice taker, null = not on the sheet at all
+      penaltyOrder: player.penalties_order,
+      freeKickOrder: player.direct_freekicks_order,
+      cornerOrder: player.corners_and_indirect_freekicks_order,
+      transfersInThisGw: player.transfers_in_event,
+      transfersOutThisGw: player.transfers_out_event,
+      ictIndex: player.ict_index,
+      bps: player.bps,
     };
   });
 
@@ -73,12 +89,12 @@ export async function generateAiInsight({
     const maxBudget = bankTenths + Math.max(...positionSquad.map((p: any) => p.sellingPrice * 10), 0);
     candidatesByPosition[posId] = getAffordableCandidates(bootstrap, posId, maxBudget, squadElementIds).map((c: any) => ({
       ...c,
-      upcomingFixtures: getUpcomingFixtures(fixtures, c.team, gameweek),
+      upcomingFixtures: getUpcomingFixtures(bootstrap, fixtures, c.team, gameweek),
       lastSeasonPoints: lastSeasonById.get(c.id) ?? null,
     }));
     differentialsByPosition[posId] = getDifferentialCandidates(bootstrap, posId, maxBudget, squadElementIds).map((c: any) => ({
       ...c,
-      upcomingFixtures: getUpcomingFixtures(fixtures, c.team, gameweek),
+      upcomingFixtures: getUpcomingFixtures(bootstrap, fixtures, c.team, gameweek),
     }));
   }
 
@@ -96,9 +112,35 @@ export async function generateAiInsight({
       "alongside their form and points when ranking options. A player's upcomingFixtures " +
       "array reveals blank and double gameweeks — factor both into reasoning when they " +
       "occur. lastSeasonPoints is background context only, weighted well below current " +
-      "form. For differentials, only call out a candidate if their form and fixtures " +
-      "genuinely justify it — a low-ownership player with poor form isn't a differential " +
-      "worth recommending, just an unpopular one. If fewer than 5 sensible transfer " +
+      "form. Treat expectedGoalInvolvements (underlying xG+xA) as a steadier signal than " +
+      "form alone — form can be skewed by a single fluky game, so when the two disagree, " +
+      "trust the underlying numbers more and say so explicitly (e.g. a player whose form " +
+      "is low but xGI is strong may be due a points return). Check every squad player's " +
+      "fitnessStatus and chanceOfPlaying before suggesting anything about them: 'i' " +
+      "(injured), 's' (suspended), or 'u' (unavailable) means they should not be captained " +
+      "and are a transfer-out priority regardless of stats — mention the news field if " +
+      "present. 'd' (doubtful) with a chanceOfPlaying below 75 means flag the risk rather " +
+      "than ignoring it, especially before suggesting them as captain. Apply the same " +
+      "caution to candidates' chanceOfPlaying before recommending them as a transfer in. " +
+      "A player's upcomingFixtures entries include opponentAttackStrength and " +
+      "opponentDefenceStrength alongside the difficulty rating — use these for nuance the " +
+      "single difficulty number flattens (e.g. a fixture rated 'easy' against a team that " +
+      "defends well at home is less clear-cut than the rating suggests). starts relative to " +
+      "how many gameweeks have been played is a rotation-risk signal — a player with strong " +
+      "form or xGI but a low starts count isn't nailed-on, and that risk should be mentioned " +
+      "before recommending them, especially as a transfer-in or captain pick. penaltyOrder, " +
+      "freeKickOrder, and cornerOrder of 1 mean a player is first-choice on that set piece — " +
+      "treat that as a genuine point in their favour, especially for defenders and " +
+      "lower-ownership midfielders where set-piece goals are a bigger share of their output. " +
+      "transfersInThisGw and transfersOutThisGw show momentum — a player being heavily " +
+      "transferred in this week is useful supporting context for a differential or template " +
+      "pick, but never the primary reason to recommend someone. ictIndex and bps are " +
+      "secondary underlying-involvement signals, most useful for midfielders and defenders " +
+      "whose goal/assist numbers understate how threatening they've been — treat them as a " +
+      "supporting data point alongside xGI, not a replacement for it. " +
+      "For differentials, only call out a candidate if their form, xGI, and fixtures " +
+      "genuinely justify it — a low-ownership player with poor underlying numbers isn't a " +
+      "differential worth recommending, just an unpopular one. If fewer than 5 sensible transfer " +
       "options exist, give fewer rather than padding the list with weak ones. Never " +
       "suggest a chip that's already been used this season — check the chips-used list " +
       "first. Only recommend playing a chip this gameweek if the squad and fixtures " +
@@ -125,21 +167,31 @@ export async function generateAiInsight({
           "top suggestion in under 15 words (e.g. 'HEADLINE: Sell Marín for Håkansson, frees " +
           "£5.5m, costs nothing.') — this is used in a deadline email teaser, so it needs to " +
           "stand alone without the rest of the context. Leave a blank line, then continue with " +
-          "the full breakdown: suggest up to 5 transfer options that fit within budget (selling " +
-          "price + bank ≥ buying price), ranked by how strongly you'd recommend each considering " +
-          "both form and the fixture run. For every option, state the cost math, the incoming " +
-          "player's position, season points total, and a one-sentence reason that references " +
-          "their fixture difficulty specifically. Then compare the bench to the starting XI, " +
-          "position by position — if any bench player's form and fixtures clearly outperform " +
-          "a starter in the same position, say who should come in and who should sit, with " +
-          "reasoning. Add a short 'Differential watch' note — one low-ownership player worth " +
-          "considering if their form and fixtures back it up, or say there isn't a strong one " +
-          "this week rather than forcing a pick. Add a one-line 'Template check' noting any " +
-          "widely-owned player you're missing who's genuinely in form, if relevant. If you're " +
-          "meaningfully behind the manager directly above you in a league, mention it briefly " +
-          "and note whether this gameweek's suggestions would help close that gap. Finish with " +
-          "a captain pick and a vice-captain pick for next gameweek, justified by their fixture " +
-          "difficulty as well as form.",
+          "the full breakdown as separate paragraphs, each starting with one of the exact tags " +
+          "below (uppercase, followed by a colon and a space) so the dashboard can label each " +
+          "section — never omit a tag and never invent a new one:\n" +
+          "- 'TRANSFER: ' — one paragraph per suggestion, up to 5, that fit within budget " +
+          "(selling price + bank ≥ buying price), ranked by how strongly you'd recommend each " +
+          "considering both form and the fixture run. For every option, state the cost math, " +
+          "the incoming player's position, season points total, and a one-sentence reason that " +
+          "references their fixture difficulty specifically.\n" +
+          "- 'BENCH: ' — compare the bench to the starting XI, position by position; if any " +
+          "bench player's form and fixtures clearly outperform a starter in the same position, " +
+          "say who should come in and who should sit, with reasoning. Omit this tag entirely if " +
+          "there's no meaningful case to make.\n" +
+          "- 'DIFFERENTIAL: ' — one low-ownership player worth considering if their form and " +
+          "fixtures back it up. Omit this tag entirely rather than forcing a weak pick.\n" +
+          "- 'TEMPLATE: ' — one widely-owned player you're missing who's genuinely in form. " +
+          "Omit this tag entirely if nothing's relevant.\n" +
+          "- 'RIVAL: ' — only if you're meaningfully behind the manager directly above you in " +
+          "a league: mention it briefly and note whether this gameweek's suggestions would " +
+          "help close that gap. Omit this tag entirely otherwise.\n" +
+          "- 'CHIP: ' — only if the squad and fixtures genuinely justify playing a chip this " +
+          "gameweek that hasn't already been used. Omit this tag entirely otherwise — do not " +
+          "use it just to say no chip is worth playing.\n" +
+          "- 'CAPTAIN: ' — exactly one paragraph with a captain pick and a vice-captain pick " +
+          "for next gameweek, justified by their fixture difficulty as well as form. Always " +
+          "include this tag.",
       },
     ],
   });

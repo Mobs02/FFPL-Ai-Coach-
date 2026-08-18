@@ -75,7 +75,7 @@ const STEPS = [
   },
   {
     title: "Get AI-powered advice",
-    body: "Before each deadline, get a budget-checked transfer suggestion, captain pick, and differential watch.",
+    body: "Before each deadline, get a budget-checked transfer suggestion, captain pick, and differential watch — you make the actual moves yourself on the official FPL site.",
   },
 ];
 
@@ -279,6 +279,9 @@ export default function Welcome() {
                       </p>
                       <p>
                         <b>Captain:</b> Haaland. <b>Vice:</b> Palmer.
+                      </p>
+                      <p className="ai-disclaimer">
+                        Advisory only — you make every change yourself on the official FPL site.
                       </p>
                     </div>
                   </div>
