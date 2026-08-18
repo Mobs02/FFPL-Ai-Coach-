@@ -1,7 +1,7 @@
 name: Poll FPL
 on:
   schedule:
-    - cron: "*/15 12-23 * * 6,0,1"   # every 15 min, 12:00-23:00 UTC, Sat/Sun/Mon — live matchday tracking
+    - cron: "0 12-23 * * 6,0,1"      # once an hour, 12:00-23:00 UTC, Sat/Sun/Mon — live matchday tracking
     - cron: "0 9 * * *"              # once daily, every day, 9:00 UTC — catches deadline changes and settles Tuesday-morning results
   workflow_dispatch: {}
 
