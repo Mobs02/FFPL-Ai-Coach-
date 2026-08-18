@@ -208,7 +208,7 @@ export default async function Dashboard() {
         <div className="status-row">
           {!team.error && <span className="status-chip">{team.freeTransfers} free transfer{team.freeTransfers === 1 ? "" : "s"}</span>}
           {!team.error && <span className="status-chip fresh">Updated {minutesAgo(team.capturedAt)}m ago</span>}
-          <a href="/settings" className="status-chip" style={{ textDecoration: "none" }}>
+          <a href="/settings" className="status-chip" style={{ textDecoration: "none", marginLeft: "auto" }}>
             Settings
           </a>
         </div>
