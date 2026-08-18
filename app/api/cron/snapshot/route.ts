@@ -57,7 +57,7 @@ async function pollAndSnapshot(manager: Manager, bootstrap: any, currentEvent: n
 // Fires once, in the ~1h window this cron passes through the 24h-to-deadline
 // mark. Runs independently of whether a gameweek is currently live, since
 // the very first reminder (for GW1) needs to fire during preseason.
-async function sendDeadlineReminders(bootstrap: any) {
+async function sendDeadlineReminders(bootstrap: any, currentEvent: number | undefined) {
   const nextEvent = bootstrap.events.find((e: any) => e.is_next);
   if (!nextEvent) return { sent: 0 };
 
@@ -88,13 +88,19 @@ async function sendDeadlineReminders(bootstrap: any) {
       .order("captured_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    const { data: recommendation } = await supabase
-      .from("ai_recommendations")
-      .select("headline")
-      .eq("manager_id", manager.id)
-      .eq("gameweek", nextEvent.id)
-      .eq("season", CURRENT_SEASON)
-      .maybeSingle();
+    // Recommendations are generated for currentEvent (the already-locked
+    // gameweek whose squad picks are visible) — not nextEvent, whose deadline
+    // hasn't passed yet. Look them up by the key they're actually stored
+    // under, or this always misses.
+    const { data: recommendation } = currentEvent
+      ? await supabase
+          .from("ai_recommendations")
+          .select("headline")
+          .eq("manager_id", manager.id)
+          .eq("gameweek", currentEvent)
+          .eq("season", CURRENT_SEASON)
+          .maybeSingle()
+      : { data: null };
 
     if (authUser?.user?.email) {
       await sendDeadlineReminder(
@@ -156,7 +162,7 @@ export async function GET(request: Request) {
     bootstrap.events.find((e: any) => e.is_current)?.id ??
     bootstrap.events.filter((e: any) => e.finished).slice(-1)[0]?.id;
 
-  const { sent: remindersSent } = await sendDeadlineReminders(bootstrap);
+  const { sent: remindersSent } = await sendDeadlineReminders(bootstrap, currentEvent);
 
   if (!currentEvent) {
     return NextResponse.json({
