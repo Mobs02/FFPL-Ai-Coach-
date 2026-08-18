@@ -5,6 +5,7 @@ import { AddLeagueForm } from "./AddLeagueForm";
 import { RegenerateButton } from "./RegenerateButton";
 import { SiteFooter } from "./SiteFooter";
 import { PlayerPhoto } from "./PlayerPhoto";
+import { AiFeedback } from "./AiFeedback";
 
 type SquadPlayer = {
   name: string;
@@ -124,7 +125,17 @@ function LeagueCard({ league, totalPoints }: { league: LeagueEntry; totalPoints:
   );
 }
 
-function AiCard({ headline, content }: { headline: string | null; content: string | null }) {
+function AiCard({
+  id,
+  headline,
+  content,
+  feedback,
+}: {
+  id: number | null;
+  headline: string | null;
+  content: string | null;
+  feedback: string | null;
+}) {
   const paragraphs = (content ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
   return (
     <div className="ai-card">
@@ -140,6 +151,7 @@ function AiCard({ headline, content }: { headline: string | null; content: strin
         <p>No recommendation yet — click below to generate one for this gameweek.</p>
       )}
       <RegenerateButton hasRecommendation={paragraphs.length > 0} />
+      {id != null && paragraphs.length > 0 && <AiFeedback recommendationId={id} initialFeedback={feedback} />}
     </div>
   );
 }
@@ -189,11 +201,11 @@ export default async function Dashboard() {
     authedFetch<HistoryResponse>("/api/history"),
   ]);
 
-  let recommendation: { headline: string | null; content: string | null } | null = null;
+  let recommendation: { id: number; headline: string | null; content: string | null; feedback: string | null } | null = null;
   if (!team.error) {
     const { data } = await supabase
       .from("ai_recommendations")
-      .select("headline, content")
+      .select("id, headline, content, feedback")
       .eq("manager_id", user.id)
       .eq("gameweek", team.gameweek)
       .maybeSingle();
@@ -305,7 +317,12 @@ export default async function Dashboard() {
                 <LeagueCard key={league.leagueId} league={league} totalPoints={team.totalPoints} />
               ))}
               <RankTrend history={history.history ?? []} />
-              <AiCard headline={recommendation?.headline ?? null} content={recommendation?.content ?? null} />
+              <AiCard
+                id={recommendation?.id ?? null}
+                headline={recommendation?.headline ?? null}
+                content={recommendation?.content ?? null}
+                feedback={recommendation?.feedback ?? null}
+              />
             </div>
           </div>
         </>

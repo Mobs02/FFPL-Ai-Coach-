@@ -158,6 +158,20 @@ header.app-header {
 .ai-card p { font-size: 13px; line-height: 1.55; margin: 0 0 8px; color: #4a3a1a; }
 .ai-card p:last-child { margin-bottom: 0; }
 .ai-card b { color: var(--purple); }
+.ai-feedback {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px; padding-top: 10px;
+  border-top: 1px solid rgba(55, 0, 60, 0.08);
+  font-size: 12px; color: #8a7a4a;
+}
+.ai-feedback-btn {
+  background: none; border: 1px solid transparent; border-radius: 999px;
+  font-size: 14px; line-height: 1; padding: 4px 7px; cursor: pointer;
+  opacity: 0.55; transition: opacity 0.15s, background 0.15s;
+}
+.ai-feedback-btn:hover { opacity: 0.85; background: rgba(55, 0, 60, 0.05); }
+.ai-feedback-btn.active { opacity: 1; background: rgba(0, 255, 133, 0.15); border-color: rgba(0, 255, 133, 0.3); }
+.ai-feedback-btn:disabled { cursor: default; }
 
 footer.app-footer { text-align: center; font-size: 11.5px; color: #9a8a9e; padding: 6px 20px 24px; }
 
