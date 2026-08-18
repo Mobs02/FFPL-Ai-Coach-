@@ -176,6 +176,19 @@ export function SettingsClient({
         </div>
       </div>
 
+      <div className="section">
+        <h2>Support</h2>
+        <div className="setting-row">
+          <div>
+            <div className="row-label">Contact us</div>
+            <div className="row-sub">Questions, bugs, or feedback — we read every email</div>
+          </div>
+          <a className="btn-secondary" href="mailto:contactus@squadscoutai.com" style={{ display: "inline-block", textDecoration: "none" }}>
+            Email us
+          </a>
+        </div>
+      </div>
+
       <div className="section danger">
         <h2>Danger zone</h2>
         <div className="danger-row">

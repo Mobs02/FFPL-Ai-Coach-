@@ -4,6 +4,7 @@ export function SiteFooter() {
       <div className="wp-footer-links">
         <a href="/privacy">Privacy</a>
         <a href="/terms">Terms</a>
+        <a href="mailto:contactus@squadscoutai.com">Contact</a>
         <a href="/sign-in">Sign in</a>
       </div>
       Not affiliated with the Premier League or Fantasy Premier League.
