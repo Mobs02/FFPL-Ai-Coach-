@@ -1,6 +1,6 @@
 export function SiteNav() {
   return (
-    <nav className="wp-nav">
+    <nav className="wp-nav site-nav">
       <div className="wp-nav-brand auth-nav-brand">
         <img src="/logo-stacked-white.png" alt="SquadScout AI" />
       </div>
