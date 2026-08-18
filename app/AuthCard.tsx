@@ -1,4 +1,5 @@
 import { SiteNav } from "./SiteNav";
+import { SiteFooter } from "./SiteFooter";
 
 export function AuthCard({
   heading,
@@ -28,6 +29,7 @@ export function AuthCard({
         </div>
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

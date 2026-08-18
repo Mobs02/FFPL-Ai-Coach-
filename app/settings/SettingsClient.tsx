@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
+import { SiteFooter } from "../SiteFooter";
 
 type League = { id: number; name: string; rank: number | null };
 
@@ -188,9 +189,7 @@ export function SettingsClient({
         </div>
       </div>
 
-      <div className="footer-links">
-        <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>
-      </div>
+      <SiteFooter />
     </>
   );
 }

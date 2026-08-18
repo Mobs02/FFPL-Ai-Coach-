@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { PhoneShowcase } from "./PhoneShowcase";
 import { SpiralSegment } from "./SpiralConnector";
+import { SiteFooter } from "../SiteFooter";
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -283,14 +284,7 @@ export default function Welcome() {
         </Reveal>
       </section>
 
-      <footer className="wp-footer">
-        <div className="wp-footer-links">
-          <a href="/privacy">Privacy</a>
-          <a href="/terms">Terms</a>
-          <a href="/sign-in">Sign in</a>
-        </div>
-        Not affiliated with the Premier League or Fantasy Premier League.
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

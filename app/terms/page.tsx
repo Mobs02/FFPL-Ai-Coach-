@@ -1,4 +1,5 @@
 import { SiteNav } from "../SiteNav";
+import { SiteFooter } from "../SiteFooter";
 
 export default function Terms() {
   return (
@@ -17,6 +18,7 @@ export default function Terms() {
           </p>
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { AddLeagueForm } from "./AddLeagueForm";
 import { RegenerateButton } from "./RegenerateButton";
+import { SiteFooter } from "./SiteFooter";
 
 type SquadPlayer = {
   name: string;
@@ -310,7 +311,7 @@ export default async function Dashboard() {
         </div>
       </div>
 
-      <footer className="app-footer">Not affiliated with the Premier League or Fantasy Premier League.</footer>
+      <SiteFooter />
     </div>
   );
 }
