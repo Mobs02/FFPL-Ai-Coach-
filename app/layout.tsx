@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import "./mockup-theme.css";
+import { RegisterServiceWorker } from "./RegisterServiceWorker";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -18,12 +19,25 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "SquadScout AI",
   description: "Your FPL squad, points, and leagues in one place.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "SquadScout AI",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#37003c",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <RegisterServiceWorker />
+        {children}
+      </body>
     </html>
   );
 }
