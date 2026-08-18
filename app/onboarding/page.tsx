@@ -30,7 +30,7 @@ export default function Onboarding() {
   }
 
   return (
-    <AuthCard title="Add your FPL team" stepTag="Step 2 of 2">
+    <AuthCard heading="Add your FPL team" stepTag="Step 2 of 2">
       <form onSubmit={handleSubmit}>
         <AuthInput
           label="Your FPL manager ID"

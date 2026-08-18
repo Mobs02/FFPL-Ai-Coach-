@@ -29,14 +29,14 @@ export default function ResetPassword() {
 
   if (done) {
     return (
-      <AuthCard title="Squad HQ">
-        <p style={{ fontSize: 13.5, color: "#6b5a70", textAlign: "center" }}>Password updated — redirecting…</p>
+      <AuthCard heading="Password updated">
+        <p style={{ fontSize: 13.5, color: "#6b5a70", textAlign: "center" }}>Redirecting to sign in…</p>
       </AuthCard>
     );
   }
 
   return (
-    <AuthCard title="Squad HQ">
+    <AuthCard heading="Set a new password">
       <form onSubmit={handleSubmit}>
         <AuthInput
           label="New password"

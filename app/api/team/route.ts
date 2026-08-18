@@ -1,16 +1,21 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { getEntry, getBootstrap } from "@/lib/fpl";
 
-// Tier 2 (proper per-account Phase 4): this route never calls FPL. It reads
-// the latest snapshot the cron job (Phase 5) already stored — that's what
-// makes the "one requester" architecture actually true. Every dashboard view
-// is a cheap database read, regardless of how many people open it at once.
+// Tier 2 (proper per-account Phase 4): this route never calls FPL for the
+// normal case — it reads the latest snapshot the cron job (Phase 5) already
+// stored, which is what makes the "one requester" architecture actually
+// true. The one deliberate exception is the pre-season/no-snapshot-yet
+// fallback below: FPL's picks endpoint 404s until a gameweek's deadline
+// passes, so there's nothing for the cron to have stored, but the entry
+// endpoint (team name, manager name) is public year-round — a single cheap
+// live call here beats showing a bare error to a brand-new or pre-season user.
 export async function GET() {
   const supabase = await getSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
 
-  const { data: manager } = await supabase.from("managers").select("id").eq("id", user.id).maybeSingle();
+  const { data: manager } = await supabase.from("managers").select("id, fpl_manager_id").eq("id", user.id).maybeSingle();
   if (!manager) return NextResponse.json({ needsOnboarding: true }, { status: 404 });
 
   const { data: snapshot } = await supabase
@@ -22,7 +27,15 @@ export async function GET() {
     .maybeSingle();
 
   if (!snapshot) {
-    return NextResponse.json({ error: "No data yet — the next scheduled poll will populate this." }, { status: 404 });
+    const [entry, bootstrap] = await Promise.all([getEntry(manager.fpl_manager_id), getBootstrap()]);
+    const nextEvent = bootstrap.events.find((e: any) => e.is_next);
+    return NextResponse.json({
+      noSnapshotYet: true,
+      teamName: entry.name,
+      managerName: `${entry.player_first_name} ${entry.player_last_name}`,
+      nextDeadline: nextEvent?.deadline_time ?? null,
+      error: "Squad and points aren't available yet — FPL only reveals this once a gameweek's deadline passes.",
+    }, { status: 404 });
   }
 
   return NextResponse.json({

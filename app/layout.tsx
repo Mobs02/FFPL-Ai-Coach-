@@ -16,7 +16,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Squad HQ",
+  title: "SquadScout AI",
   description: "Your FPL squad, points, and leagues in one place.",
 };
 

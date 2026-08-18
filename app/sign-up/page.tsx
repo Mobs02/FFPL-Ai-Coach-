@@ -27,7 +27,7 @@ export default function SignUp() {
 
   if (sent) {
     return (
-      <AuthCard title="Squad HQ">
+      <AuthCard heading="Check your email">
         <p style={{ fontSize: 13.5, color: "#6b5a70", lineHeight: 1.6, textAlign: "center" }}>
           We sent a confirmation link to <b>{email}</b>. Click it, then come back and sign in.
         </p>
@@ -36,7 +36,7 @@ export default function SignUp() {
   }
 
   return (
-    <AuthCard title="Squad HQ">
+    <AuthCard heading="Create your account">
       <form onSubmit={handleSubmit}>
         <AuthInput
           label="Email"

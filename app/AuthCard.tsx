@@ -1,23 +1,34 @@
+import { SiteNav } from "./SiteNav";
+
 export function AuthCard({
-  title,
+  heading,
   stepTag,
   children,
 }: {
-  title: string;
+  heading?: string;
   stepTag?: string;
   children: React.ReactNode;
 }) {
   return (
-    <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
-      <div className="center-card">
-        {stepTag && <span className="step-tag">{stepTag}</span>}
-        <div className="brand-row">
-          <div className="brand-mark">HQ</div>
-          <div className="brand-name">{title}</div>
+    <>
+      <SiteNav />
+      <main className="auth-page">
+        <img src="/home-page-banner.png" alt="" className="auth-bg-banner" />
+        <div className="auth-card-wrap">
+        <div className="center-card">
+          {stepTag && <span className="step-tag">{stepTag}</span>}
+          <div className="brand-row">
+            <img src="/logo-icon.png" alt="" className="brand-mark" />
+            <div className="brand-name">SquadScout AI</div>
+          </div>
+          {heading && (
+            <p style={{ textAlign: "center", fontSize: 13.5, color: "#6b5a70", margin: "-14px 0 18px" }}>{heading}</p>
+          )}
+          {children}
         </div>
-        {children}
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   );
 }
 

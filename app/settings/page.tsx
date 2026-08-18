@@ -37,7 +37,7 @@ export default async function Settings() {
     <div className="wrap-narrow">
       <header className="app-header">
         <div className="navrow">
-          <div className="brand-mark">HQ</div>
+          <img src="/logo-icon.png" alt="" className="brand-mark" />
           <div style={{ fontFamily: "var(--font-poppins)", fontWeight: 600, fontSize: 16 }}>Settings</div>
           <a className="back-link" href="/">
             ← Back to dashboard

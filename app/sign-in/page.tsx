@@ -28,7 +28,7 @@ export default function SignIn() {
   }
 
   return (
-    <AuthCard title="Squad HQ">
+    <AuthCard heading="Sign in to SquadScout AI">
       <form onSubmit={handleSubmit}>
         <AuthInput
           label="Email"

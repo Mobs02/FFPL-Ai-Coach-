@@ -22,7 +22,7 @@ export default function ForgotPassword() {
 
   if (sent) {
     return (
-      <AuthCard title="Squad HQ">
+      <AuthCard heading="Check your email">
         <p style={{ fontSize: 13.5, color: "#6b5a70", lineHeight: 1.6, textAlign: "center" }}>
           If an account exists for <b>{email}</b>, a password reset link is on its way.
         </p>
@@ -31,7 +31,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <AuthCard title="Squad HQ">
+    <AuthCard heading="Reset your password">
       <form onSubmit={handleSubmit}>
         <AuthInput
           label="Email"

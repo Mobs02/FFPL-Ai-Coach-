@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { AddLeagueForm } from "./AddLeagueForm";
+import { RegenerateButton } from "./RegenerateButton";
 
 type SquadPlayer = {
   name: string;
@@ -22,6 +23,10 @@ type TeamResponse = {
   squad: SquadPlayer[];
   capturedAt: string;
   error?: string;
+  noSnapshotYet?: boolean;
+  teamName?: string;
+  managerName?: string;
+  nextDeadline?: string | null;
 };
 
 type LeagueStandingEntry = { entry_name: string; player_name: string; rank: number; total: number };
@@ -110,6 +115,26 @@ function LeagueCard({ league, totalPoints }: { league: LeagueEntry; totalPoints:
   );
 }
 
+function AiCard({ headline, content }: { headline: string | null; content: string | null }) {
+  const paragraphs = (content ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  return (
+    <div className="ai-card">
+      <span className="ai-tag">AI suggestion</span>
+      {headline && (
+        <p>
+          <b>{headline}</b>
+        </p>
+      )}
+      {paragraphs.length > 0 ? (
+        paragraphs.map((line, i) => <p key={i}>{line}</p>)
+      ) : (
+        <p>No recommendation yet — click below to generate one for this gameweek.</p>
+      )}
+      <RegenerateButton hasRecommendation={paragraphs.length > 0} />
+    </div>
+  );
+}
+
 function RankTrend({ history }: { history: HistoryPoint[] }) {
   if (history.length < 2) return null;
 
@@ -155,6 +180,17 @@ export default async function Dashboard() {
     authedFetch<HistoryResponse>("/api/history"),
   ]);
 
+  let recommendation: { headline: string | null; content: string | null } | null = null;
+  if (!team.error) {
+    const { data } = await supabase
+      .from("ai_recommendations")
+      .select("headline, content")
+      .eq("manager_id", user.id)
+      .eq("gameweek", team.gameweek)
+      .maybeSingle();
+    recommendation = data;
+  }
+
   const starters = (team.squad ?? []).filter((p) => !p.isBench);
   const bench = (team.squad ?? []).filter((p) => p.isBench);
 
@@ -163,8 +199,8 @@ export default async function Dashboard() {
       <header className="app-header">
         <div className="navrow">
           <div className="brand">
-            <div className="brand-mark">HQ</div>
-            Squad HQ
+            <img src="/logo-icon.png" alt="" className="brand-mark" />
+            SquadScout AI
           </div>
           {!team.error && <div className="gw-pill">Gameweek {team.gameweek}</div>}
         </div>
@@ -179,7 +215,25 @@ export default async function Dashboard() {
 
       {team.error ? (
         <div className="section">
+          {team.noSnapshotYet && (team.teamName || team.managerName) && (
+            <div style={{ marginBottom: 14 }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: "#9a8a9e", textTransform: "uppercase", margin: "0 0 4px" }}>
+                Your team
+              </p>
+              <p style={{ fontSize: 18, fontFamily: "var(--font-poppins)", fontWeight: 600, color: "var(--purple)", margin: 0 }}>
+                {team.teamName}
+              </p>
+              {team.managerName && (
+                <p style={{ fontSize: 13, color: "#6b5a70", margin: "2px 0 0" }}>{team.managerName}</p>
+              )}
+            </div>
+          )}
           <p style={{ fontSize: 13.5, color: "#6b5a70" }}>{team.error}</p>
+          {team.nextDeadline && (
+            <p style={{ fontSize: 13.5, color: "#6b5a70", marginTop: 6 }}>
+              Gameweek 1 deadline: <b style={{ color: "var(--purple)" }}>{new Date(team.nextDeadline).toLocaleString()}</b>
+            </p>
+          )}
         </div>
       ) : (
         <>
@@ -231,6 +285,7 @@ export default async function Dashboard() {
                 <LeagueCard key={league.leagueId} league={league} totalPoints={team.totalPoints} />
               ))}
               <RankTrend history={history.history ?? []} />
+              <AiCard headline={recommendation?.headline ?? null} content={recommendation?.content ?? null} />
             </div>
           </div>
         </>

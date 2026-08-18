@@ -1,3 +1,5 @@
+import { supabase } from "./supabase"; // needed by backfillLastSeasonPoints below
+
 const FPL_BASE = "https://fantasy.premierleague.com/api";
 
 async function fplFetch(path: string, retries = 2): Promise<any> {
@@ -26,6 +28,7 @@ export const getLeagueStandings = (leagueId: number, page = 1) =>
   fplFetch(`/leagues-classic/${leagueId}/standings/?page_standings=${page}`);
 export const getH2HStandings = (leagueId: number, page = 1) =>
   fplFetch(`/leagues-h2h/${leagueId}/standings/?page_standings=${page}`);
+export const getPlayerSummary = (playerId: number) => fplFetch(`/element-summary/${playerId}/`);
 
 export function getPlayerPhotoUrl(playerCode: number): string {
   return `https://resources.premierleague.com/premierleague/photos/players/110x140/p${playerCode}.png`;
@@ -72,5 +75,23 @@ export async function findManagerInLeague(leagueId: number, managerId: number) {
     }
     previousPageLastEntry = results.at(-1) ?? null;
     page++;
+  }
+}
+
+// Run this once at season start (or as a rare, low-frequency scheduled job) —
+// not on every AI call. A small delay between requests avoids hammering FPL
+// with ~700 rapid-fire calls in a tight loop.
+export async function backfillLastSeasonPoints(bootstrap: any) {
+  for (const player of bootstrap.elements) {
+    const summary = await getPlayerSummary(player.id);
+    const lastSeason = summary.history_past.at(-1); // most recent completed season
+    if (lastSeason) {
+      await supabase.from("player_history_cache").upsert({
+        player_id: player.id,
+        last_season_points: lastSeason.total_points,
+        last_season_minutes: lastSeason.minutes,
+      });
+    }
+    await new Promise((r) => setTimeout(r, 100));
   }
 }
