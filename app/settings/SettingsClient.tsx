@@ -157,7 +157,7 @@ export function SettingsClient({
         <div className="setting-row">
           <div>
             <div className="row-label">Deadline email reminders</div>
-            <div className="row-sub">Sent ~24 hours before each gameweek deadline</div>
+            <div className="row-sub">Sent 12–36 hours before each gameweek deadline</div>
           </div>
           <button className={`toggle ${reminders ? "" : "off"}`} onClick={toggleReminders} aria-label="Toggle deadline reminders" />
         </div>

@@ -54,15 +54,33 @@ async function pollAndSnapshot(manager: Manager, bootstrap: any, currentEvent: n
   }
 }
 
-// Fires once, in the ~1h window this cron passes through the 24h-to-deadline
-// mark. Runs independently of whether a gameweek is currently live, since
-// the very first reminder (for GW1) needs to fire during preseason.
+// Reminder emails all share one deadline, so without spreading them out
+// every manager's email would fire in the same ~1h window — fine at a
+// handful of users, but Resend's free tier caps at 100 emails/day. Each
+// manager gets a deterministic personal threshold somewhere between 12h and
+// 36h before the deadline (stable across runs, since it's derived from their
+// own id), so sends spread across cron runs — and often across two calendar
+// days — instead of clustering into one send-everything window.
+const REMINDER_WINDOW_MIN_HOURS = 12;
+const REMINDER_WINDOW_MAX_HOURS = 36;
+
+function reminderThresholdHours(managerId: string): number {
+  let hash = 0;
+  for (let i = 0; i < managerId.length; i++) {
+    hash = (hash * 31 + managerId.charCodeAt(i)) | 0;
+  }
+  const span = REMINDER_WINDOW_MAX_HOURS - REMINDER_WINDOW_MIN_HOURS;
+  return REMINDER_WINDOW_MIN_HOURS + (Math.abs(hash) % (span + 1));
+}
+
+// Runs independently of whether a gameweek is currently live, since the very
+// first reminder (for GW1) needs to fire during preseason.
 async function sendDeadlineReminders(bootstrap: any, currentEvent: number | undefined) {
   const nextEvent = bootstrap.events.find((e: any) => e.is_next);
   if (!nextEvent) return { sent: 0 };
 
   const hoursRemaining = (new Date(nextEvent.deadline_time).getTime() - Date.now()) / 1000 / 60 / 60;
-  if (hoursRemaining > 24 || hoursRemaining <= 23) return { sent: 0 };
+  if (hoursRemaining > REMINDER_WINDOW_MAX_HOURS || hoursRemaining <= 0) return { sent: 0 };
 
   const { data: managers } = await supabase
     .from("managers")
@@ -71,6 +89,9 @@ async function sendDeadlineReminders(bootstrap: any, currentEvent: number | unde
 
   let sent = 0;
   for (const manager of managers ?? []) {
+    // Not this manager's turn yet — their personal window hasn't opened.
+    if (hoursRemaining > reminderThresholdHours(manager.id)) continue;
+
     const { data: alreadySent } = await supabase
       .from("deadline_reminders_sent")
       .select("manager_id")
