@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { PhoneShowcase } from "./PhoneShowcase";
 import { SpiralSegment } from "./SpiralConnector";
 import { SiteFooter } from "../SiteFooter";
+import { SwapIcon, TargetIcon, GridIcon, EyeIcon, ArmbandIcon, PulseIcon } from "./FeatureIcons";
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -28,32 +29,32 @@ function Reveal({ children, delay = 0, className }: { children: React.ReactNode;
 
 const FEATURES = [
   {
-    icon: "◆",
+    icon: <SwapIcon />,
     title: "AI transfer suggestions",
     body: "Budget-aware recommendations that account for your actual selling prices, bank, and free transfers — with the exact cost math shown, and a clear -4 warning if a pick would cost you a hit.",
   },
   {
-    icon: "●",
+    icon: <TargetIcon />,
     title: "Under-the-radar picks",
     body: "Get pointed to in-form players almost nobody else has picked yet — a real edge over the crowd, not just a popular \"safe\" swap.",
   },
   {
-    icon: "✦",
+    icon: <GridIcon />,
     title: "Template radar",
     body: "See the widely-owned, in-form players you're missing — the picks everyone else already has that are quietly costing you rank.",
   },
   {
-    icon: "▣",
+    icon: <EyeIcon />,
     title: "Rival scout",
     body: "See exactly how far behind the manager above you in each mini-league you are, and whether this week's suggestions would help close the gap.",
   },
   {
-    icon: "♛",
+    icon: <ArmbandIcon />,
     title: "Captain & chip calls",
     body: "A justified captain and vice-captain pick every gameweek, plus chip guidance that never suggests one you've already used.",
   },
   {
-    icon: "▲",
+    icon: <PulseIcon />,
     title: "Live dashboard, always current",
     body: "Your squad, points, and league standings update automatically on a schedule — no more refreshing the official site during a live gameweek.",
   },
@@ -127,10 +128,12 @@ export default function Welcome() {
         </Reveal>
         <div className="wp-features">
           {FEATURES.map((f, i) => (
-            <Reveal key={f.title} delay={i * 0.1}>
+            <Reveal key={f.title} className="wp-feature-reveal" delay={i * 0.1}>
               <div className="wp-feature-card">
-                <div className="wp-feature-icon">{f.icon}</div>
-                <h3>{f.title}</h3>
+                <div className="wp-feature-head">
+                  <span className="wp-feature-icon">{f.icon}</span>
+                  <h3>{f.title}</h3>
+                </div>
                 <p>{f.body}</p>
               </div>
             </Reveal>
