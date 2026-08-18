@@ -4,6 +4,7 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { AddLeagueForm } from "./AddLeagueForm";
 import { RegenerateButton } from "./RegenerateButton";
 import { SiteFooter } from "./SiteFooter";
+import { PlayerPhoto } from "./PlayerPhoto";
 
 type SquadPlayer = {
   name: string;
@@ -67,7 +68,7 @@ function Shirt({ player, bench }: { player: SquadPlayer; bench?: boolean }) {
   return (
     <div className="shirt">
       {player.isCaptain && <span className="cap-badge">C</span>}
-      <div className={`jersey ${isGk ? "gk" : ""} ${bench ? "bench-item" : ""}`} />
+      <PlayerPhoto src={player.photoUrl} alt={player.name} isGk={isGk} bench={bench} />
       <div className="p-name">{player.name}</div>
       <div className={`p-pts ${bench ? "bench-item" : ""}`}>{player.points}</div>
     </div>

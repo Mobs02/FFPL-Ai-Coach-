@@ -33,6 +33,7 @@ export async function generateAiInsight({
   ]);
 
   const freeTransfers = latestSnapshot.data?.free_transfers ?? 1;
+  const chipsUsed = (entryHistory.chips ?? []).map((c: any) => c.name);
   const lastSeasonById = new Map((historyCache.data ?? []).map((r: any) => [r.player_id, r.last_season_points]));
 
   // Rival Scout: one row per league (already deduped to latest gameweek by
@@ -98,13 +99,18 @@ export async function generateAiInsight({
       "form. For differentials, only call out a candidate if their form and fixtures " +
       "genuinely justify it — a low-ownership player with poor form isn't a differential " +
       "worth recommending, just an unpopular one. If fewer than 5 sensible transfer " +
-      "options exist, give fewer rather than padding the list with weak ones.",
+      "options exist, give fewer rather than padding the list with weak ones. Never " +
+      "suggest a chip that's already been used this season — check the chips-used list " +
+      "first. Only recommend playing a chip this gameweek if the squad and fixtures " +
+      "genuinely justify it; otherwise don't mention chips at all rather than forcing a " +
+      "suggestion.",
     messages: [
       {
         role: "user",
         content:
           `Bank: £${(bankTenths / 10).toFixed(1)}m\n` +
           `Free transfers available: ${freeTransfers}\n` +
+          `Chips already used this season: ${JSON.stringify(chipsUsed)}\n` +
           `Full squad with selling prices, form, ownership %, bench status, fixture ` +
           `difficulty, and last season's points (background context only): ${JSON.stringify(squadWithBudget)}\n` +
           `Affordable replacement candidates by position, each with form, season points, ` +

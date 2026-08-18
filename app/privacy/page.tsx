@@ -52,10 +52,6 @@ export default function Privacy() {
                 <td>Stored so you&apos;re not charged/waiting for a fresh AI call every time you open the app</td>
               </tr>
               <tr>
-                <td>Your feedback on AI suggestions (👍/👎)</td>
-                <td>If you use this feature, stored against the recommendation it relates to</td>
-              </tr>
-              <tr>
                 <td>Email reminder preference</td>
                 <td>Whether you&apos;ve opted in or out of deadline reminder emails</td>
               </tr>
