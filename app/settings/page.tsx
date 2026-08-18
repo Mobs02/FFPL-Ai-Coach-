@@ -39,7 +39,7 @@ export default async function Settings() {
         <div className="navrow">
           <img src="/logo-icon.png" alt="" className="brand-mark" />
           <div style={{ fontFamily: "var(--font-poppins)", fontWeight: 600, fontSize: 16 }}>Settings</div>
-          <a className="back-link" href="/">
+          <a className="back-link" href="/dashboard">
             ← Back to dashboard
           </a>
         </div>

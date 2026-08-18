@@ -5,7 +5,7 @@ export function SiteNav() {
         <img src="/logo-stacked-white.png" alt="SquadScout AI" />
       </div>
       <div className="wp-nav-links">
-        <a className="wp-link" href="/welcome">
+        <a className="wp-link" href="/">
           Home
         </a>
         <a className="wp-link" href="/sign-in">
