@@ -59,8 +59,15 @@ async function authedFetch<T>(path: string): Promise<T> {
 
 const POSITION_ORDER = ["GKP", "DEF", "MID", "FWD"];
 
-function minutesAgo(iso: string) {
-  return Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+const STALE_THRESHOLD_HOURS = 6;
+
+function dataFreshness(iso: string) {
+  const minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+  const hours = minutes / 60;
+  return {
+    label: minutes < 60 ? `${minutes}m ago` : `${Math.round(hours)}h ago`,
+    stale: hours >= STALE_THRESHOLD_HOURS,
+  };
 }
 
 function Shirt({ player, bench }: { player: SquadPlayer; bench?: boolean }) {
@@ -214,7 +221,14 @@ export default async function Dashboard() {
         {!team.error && (
           <div className="status-row">
             <span className="status-chip">{team.freeTransfers} free transfer{team.freeTransfers === 1 ? "" : "s"}</span>
-            <span className="status-chip fresh">Updated {minutesAgo(team.capturedAt)}m ago</span>
+            {(() => {
+              const { label, stale } = dataFreshness(team.capturedAt);
+              return (
+                <span className={`status-chip ${stale ? "stale" : "fresh"}`}>
+                  {stale ? "⚠ " : ""}Updated {label}
+                </span>
+              );
+            })()}
           </div>
         )}
       </header>
