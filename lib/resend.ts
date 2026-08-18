@@ -1,9 +1,6 @@
 import { Resend } from "resend";
 
-// Sends from Resend's shared onboarding@resend.dev address until a verified
-// domain is added — swap this once one's available for a properly branded
-// sender instead.
-const FROM = "SquadScout AI <onboarding@resend.dev>";
+const FROM = "SquadScout AI <noreply@squadscoutai.com>";
 
 export async function sendDeadlineReminder(
   email: string,
