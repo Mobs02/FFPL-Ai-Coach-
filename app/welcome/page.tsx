@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { PhoneShowcase } from "./PhoneShowcase";
 import { SpiralSegment } from "./SpiralConnector";
 import { SiteFooter } from "../SiteFooter";
-import { SwapIcon, TargetIcon, GridIcon, EyeIcon, ArmbandIcon, PulseIcon } from "./FeatureIcons";
+import { SwapIcon, TargetIcon, GridIcon, EyeIcon, ArmbandIcon, PulseIcon, ShieldCheckIcon } from "./FeatureIcons";
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -139,6 +139,35 @@ export default function Welcome() {
             </Reveal>
           ))}
         </div>
+
+        <Reveal>
+          <div className="wp-data-box">
+            <div className="wp-data-head">
+              <span className="wp-feature-icon">
+                <ShieldCheckIcon />
+              </span>
+              <h3>Built on real data, not guesswork</h3>
+            </div>
+            <p>
+              Every suggestion is calculated from your actual squad and live stats pulled
+              directly from the official Fantasy Premier League site — nothing invented,
+              nothing estimated.
+            </p>
+            <div className="wp-data-tags">
+              <span className="wp-data-tag">Your real squad &amp; budget</span>
+              <span className="wp-data-tag">Price, form &amp; ownership</span>
+              <span className="wp-data-tag">Expected goals &amp; assists</span>
+              <span className="wp-data-tag">Fitness &amp; injury status</span>
+              <span className="wp-data-tag">Fixture difficulty &amp; opponent strength</span>
+              <span className="wp-data-tag">Set-piece order</span>
+              <span className="wp-data-tag">Rotation risk</span>
+              <span className="wp-data-tag">League standings</span>
+            </div>
+            <p className="wp-data-note">
+              Advisory only — you make every change yourself on the official FPL site.
+            </p>
+          </div>
+        </Reveal>
       </section>
 
       <section className="wp-section">

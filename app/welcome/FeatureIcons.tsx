@@ -65,3 +65,12 @@ export function PulseIcon() {
     </svg>
   );
 }
+
+export function ShieldCheckIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M12 3l7 3v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V6l7-3Z" />
+      <path d="M8.7 12.2l2.2 2.2 4.4-4.6" />
+    </svg>
+  );
+}
