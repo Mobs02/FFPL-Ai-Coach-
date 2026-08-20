@@ -27,7 +27,7 @@ export default function SignUp() {
           last_name: lastName,
           full_name: `${firstName} ${lastName}`.trim(),
         },
-        emailRedirectTo: `${window.location.origin}/sign-in`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/sign-in`,
       },
     });
     setLoading(false);
