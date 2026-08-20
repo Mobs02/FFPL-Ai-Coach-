@@ -138,7 +138,7 @@ export default function Privacy() {
           <p>
             If you&apos;re in the UK or EU, these map onto your rights under UK GDPR / the EU GDPR (access,
             rectification, erasure, and objection to processing). To exercise any of these beyond what the app&apos;s
-            settings page offers, contact us at <a href="mailto:contactus@squadscoutai.com">contactus@squadscoutai.com</a>.
+            settings page offers, contact us at <a href="mailto:squadscoutai@gmail.com">squadscoutai@gmail.com</a>.
           </p>
 
           <h2>6. Cookies</h2>
@@ -168,7 +168,7 @@ export default function Privacy() {
 
           <h2>10. Contact</h2>
           <p>
-            Questions about this policy or your data: <a href="mailto:contactus@squadscoutai.com">contactus@squadscoutai.com</a>
+            Questions about this policy or your data: <a href="mailto:squadscoutai@gmail.com">squadscoutai@gmail.com</a>
           </p>
         </div>
       </main>

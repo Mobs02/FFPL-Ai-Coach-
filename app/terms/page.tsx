@@ -128,7 +128,7 @@ export default function Terms() {
 
           <h2>13. Contact</h2>
           <p>
-            Questions about these terms: <a href="mailto:contactus@squadscoutai.com">contactus@squadscoutai.com</a>
+            Questions about these terms: <a href="mailto:squadscoutai@gmail.com">squadscoutai@gmail.com</a>
           </p>
         </div>
       </main>

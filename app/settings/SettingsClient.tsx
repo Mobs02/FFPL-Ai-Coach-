@@ -182,7 +182,7 @@ export function SettingsClient({
             <div className="row-label">Contact us</div>
             <div className="row-sub">Questions, bugs, or feedback — we read every email</div>
           </div>
-          <a className="btn-secondary" href="mailto:contactus@squadscoutai.com" style={{ display: "inline-block", textDecoration: "none" }}>
+          <a className="btn-secondary" href="mailto:squadscoutai@gmail.com" style={{ display: "inline-block", textDecoration: "none" }}>
             Email us
           </a>
         </div>
