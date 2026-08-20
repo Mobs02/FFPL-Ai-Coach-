@@ -100,7 +100,13 @@ export async function generateAiInsight({
 
   const message = await anthropic.messages.create({
     model: "claude-sonnet-5", // check docs.claude.com for the current model name before deploying
-    max_tokens: 1400,
+    max_tokens: 4000,
+    // Sonnet 5 runs adaptive thinking on by default, and thinking tokens share
+    // this same cap with the response text. On this prompt thinking never
+    // converged even at 4000 tokens (verified live) — disabled since this
+    // task is a direct structured analysis, not one that needs deep
+    // multi-step reasoning exposed.
+    thinking: { type: "disabled" },
     system:
       "You are a Fantasy Premier League analyst. Base every suggestion strictly on the " +
       "squad, budget, candidate, and fixture data provided — never invent prices, stats, " +
