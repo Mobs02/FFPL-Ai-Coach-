@@ -46,8 +46,9 @@ export default function Onboarding() {
         </AuthButton>
       </form>
       <div className="helper-box">
-        <b>Where to find this:</b> log into fantasy.premierleague.com, open &quot;Points,&quot; and look at the URL — the
-        number in <code>/entry/1234567/</code> is your manager ID. No FPL password needed, this number is public.
+        <b>Where to find this:</b> log into fantasy.premierleague.com, open &quot;Points&quot; (or &quot;Pick Team&quot;
+        before the season starts), and look at the URL — the number in <code>/entry/1234567/</code> is your manager
+        ID. No FPL password needed, this number is public.
       </div>
     </AuthCard>
   );
