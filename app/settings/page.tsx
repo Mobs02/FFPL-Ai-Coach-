@@ -14,7 +14,30 @@ export default async function Settings() {
     .select("fpl_manager_id, league_ids, email_reminders_enabled")
     .eq("id", user.id)
     .maybeSingle();
-  if (!manager) redirect("/onboarding");
+  // No hard redirect — see the matching comment in app/dashboard/page.tsx
+  // for why (FPL's mobile app has no URL bar to find a manager ID from).
+  if (!manager) {
+    return (
+      <>
+        <AppNav active="settings" />
+        <main className="app-page">
+          <div className="wrap-narrow">
+            <div className="section" style={{ textAlign: "center" }}>
+              <h2 style={{ marginBottom: 8 }}>Finish setting up your team</h2>
+              <p style={{ color: "#6b5a70", fontSize: 13.5, margin: "0 0 18px" }}>
+                Add your FPL manager ID to unlock your settings. It only takes a few seconds,
+                and there&apos;s no FPL password needed.
+              </p>
+              <a className="wp-btn wp-btn-primary" href="/onboarding" style={{ textDecoration: "none" }}>
+                Add your manager ID
+              </a>
+            </div>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
 
   const { data: leagueSnapshots } = await supabase
     .from("league_snapshots")

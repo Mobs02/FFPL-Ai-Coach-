@@ -224,7 +224,34 @@ export default async function Dashboard() {
   if (!user) redirect("/sign-in");
 
   const { data: manager } = await supabase.from("managers").select("id").eq("id", user.id).maybeSingle();
-  if (!manager) redirect("/onboarding");
+
+  // No hard redirect here on purpose — the FPL mobile app has no URL bar, so
+  // finding a manager ID often means leaving mid-onboarding to open a
+  // browser separately. Landing back on a dead-end redirect loop after that
+  // is worse than showing a persistent prompt they can act on whenever
+  // they're ready.
+  if (!manager) {
+    return (
+      <>
+        <AppNav active="dashboard" />
+        <main className="app-page">
+          <div className="wrap-narrow">
+            <div className="section" style={{ textAlign: "center" }}>
+              <h2 style={{ marginBottom: 8 }}>Finish setting up your team</h2>
+              <p style={{ color: "#6b5a70", fontSize: 13.5, margin: "0 0 18px" }}>
+                Add your FPL manager ID to unlock your squad, points, leagues, and AI suggestions.
+                It only takes a few seconds, and there&apos;s no FPL password needed.
+              </p>
+              <a className="wp-btn wp-btn-primary" href="/onboarding" style={{ textDecoration: "none" }}>
+                Add your manager ID
+              </a>
+            </div>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
 
   const [team, leagues, history] = await Promise.all([
     authedFetch<TeamResponse>("/api/team"),
