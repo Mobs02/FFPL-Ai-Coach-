@@ -45,6 +45,11 @@ export default function Onboarding() {
           Save and continue
         </AuthButton>
       </form>
+      <p style={{ textAlign: "center", margin: "14px 0 0" }}>
+        <a href="/dashboard" style={{ fontSize: 13, color: "#6b5a70" }}>
+          Don&apos;t have your manager ID handy? Skip for now
+        </a>
+      </p>
       <div className="helper-box">
         <b>Where to find this:</b> log into fantasy.premierleague.com, open &quot;Points&quot; (or &quot;Pick Team&quot;
         before the season starts), and look at the URL — the number in <code>/entry/1234567/</code> is your manager

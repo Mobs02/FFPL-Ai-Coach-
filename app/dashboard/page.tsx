@@ -245,6 +245,11 @@ export default async function Dashboard() {
               <a className="wp-btn wp-btn-primary" href="/onboarding" style={{ textDecoration: "none" }}>
                 Add your manager ID
               </a>
+              <div className="helper-box" style={{ textAlign: "left", marginTop: 20 }}>
+                <b>Where to find this:</b> log into fantasy.premierleague.com, open &quot;Points&quot; (or &quot;Pick
+                Team&quot; before the season starts), and look at the URL — the number in{" "}
+                <code>/entry/1234567/</code> is your manager ID. No FPL password needed, this number is public.
+              </div>
             </div>
           </div>
         </main>
