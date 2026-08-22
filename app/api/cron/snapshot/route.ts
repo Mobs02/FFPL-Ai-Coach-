@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getEntry, getEntryPicks, findManagerInLeague, getBootstrap, buildSquad, CURRENT_SEASON } from "@/lib/fpl";
+import { getEntry, getEntryHistory, getEntryPicks, findManagerInLeague, getBootstrap, buildSquad, CURRENT_SEASON } from "@/lib/fpl";
 import { supabase } from "@/lib/supabase";
 import { sendDeadlineReminder } from "@/lib/resend";
 import { generateAiInsight } from "@/lib/ai-insight";
@@ -7,10 +7,19 @@ import { generateAiInsight } from "@/lib/ai-insight";
 type Manager = { id: string; fpl_manager_id: number; league_ids: number[] };
 
 async function pollAndSnapshot(manager: Manager, bootstrap: any, currentEvent: number) {
-  const [entry, picks] = await Promise.all([
+  const [entry, picks, entryHistory] = await Promise.all([
     getEntry(manager.fpl_manager_id),
     getEntryPicks(manager.fpl_manager_id, currentEvent),
+    getEntryHistory(manager.fpl_manager_id),
   ]);
+
+  // Chip usage lives on the manager record (season-cumulative), not the
+  // per-gameweek snapshot — each entry carries the chip name and which
+  // gameweek it was played, e.g. {"name": "wildcard", "event": 5}.
+  await supabase
+    .from("managers")
+    .update({ chips_used: (entryHistory.chips ?? []).map((c: any) => ({ name: c.name, event: c.event })) })
+    .eq("id", manager.id);
 
   // Free transfers: FPL doesn't expose this directly, so it's tracked from
   // the previous stored value — read it before the upsert below overwrites it.

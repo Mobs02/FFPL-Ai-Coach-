@@ -15,7 +15,7 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
 
-  const { data: manager } = await supabase.from("managers").select("id, fpl_manager_id").eq("id", user.id).maybeSingle();
+  const { data: manager } = await supabase.from("managers").select("id, fpl_manager_id, chips_used").eq("id", user.id).maybeSingle();
   if (!manager) return NextResponse.json({ needsOnboarding: true }, { status: 404 });
 
   const { data: snapshot } = await supabase
@@ -46,5 +46,6 @@ export async function GET() {
     freeTransfers: snapshot.free_transfers,
     squad: snapshot.squad_json,
     capturedAt: snapshot.captured_at,
+    chipsUsed: manager.chips_used ?? [],
   });
 }

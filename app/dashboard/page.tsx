@@ -4,9 +4,9 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { AddLeagueForm } from "../AddLeagueForm";
 import { RegenerateButton } from "../RegenerateButton";
 import { SiteFooter } from "../SiteFooter";
-import { PlayerPhoto } from "../PlayerPhoto";
 import { AiFeedback } from "../AiFeedback";
 import { AppNav } from "../AppNav";
+import { SquadView } from "../SquadView";
 
 type SquadPlayer = {
   name: string;
@@ -17,6 +17,8 @@ type SquadPlayer = {
   news: string | null;
   photoUrl: string;
 };
+
+type ChipUsed = { name: string; event: number };
 
 type TeamResponse = {
   gameweek: number;
@@ -31,6 +33,7 @@ type TeamResponse = {
   teamName?: string;
   managerName?: string;
   nextDeadline?: string | null;
+  chipsUsed?: ChipUsed[];
 };
 
 type LeagueStandingEntry = { entry_name: string; player_name: string; rank: number; total: number };
@@ -59,9 +62,36 @@ async function authedFetch<T>(path: string): Promise<T> {
   return res.json();
 }
 
-const POSITION_ORDER = ["GKP", "DEF", "MID", "FWD"];
-
 const STALE_THRESHOLD_HOURS = 6;
+
+// Each of the 4 chips is available twice per season (once per half), split
+// at gameweek 20 — confirmed against FPL's own bootstrap-static chip
+// definitions. Revisit this boundary if a future season restructures it.
+const CHIP_HALF_BOUNDARY_EVENT = 20;
+const CHIP_TYPES: { key: string; label: string }[] = [
+  { key: "wildcard", label: "Wildcard" },
+  { key: "freehit", label: "Free Hit" },
+  { key: "bboost", label: "Bench Boost" },
+  { key: "3xc", label: "Triple Captain" },
+];
+
+function ChipStatusRow({ chipsUsed, gameweek }: { chipsUsed: ChipUsed[]; gameweek: number }) {
+  const inSecondHalf = gameweek >= CHIP_HALF_BOUNDARY_EVENT;
+  return (
+    <div className="chip-status-row">
+      {CHIP_TYPES.map((chip) => {
+        const used = chipsUsed.some(
+          (c) => c.name === chip.key && (inSecondHalf ? c.event >= CHIP_HALF_BOUNDARY_EVENT : c.event < CHIP_HALF_BOUNDARY_EVENT),
+        );
+        return (
+          <span key={chip.key} className={`chip-status ${used ? "used" : "available"}`}>
+            {chip.label}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
 
 function dataFreshness(iso: string) {
   const minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -70,18 +100,6 @@ function dataFreshness(iso: string) {
     label: minutes < 60 ? `${minutes}m ago` : `${Math.round(hours)}h ago`,
     stale: hours >= STALE_THRESHOLD_HOURS,
   };
-}
-
-function Shirt({ player, bench }: { player: SquadPlayer; bench?: boolean }) {
-  const isGk = player.position === "GKP";
-  return (
-    <div className="shirt">
-      {player.isCaptain && <span className="cap-badge">C</span>}
-      <PlayerPhoto src={player.photoUrl} alt={player.name} isGk={isGk} bench={bench} />
-      <div className="p-name">{player.name}</div>
-      <div className={`p-pts ${bench ? "bench-item" : ""}`}>{player.points}</div>
-    </div>
-  );
 }
 
 function LeagueCard({ league, totalPoints }: { league: LeagueEntry; totalPoints: number }) {
@@ -303,6 +321,8 @@ export default async function Dashboard() {
             )}
           </div>
 
+          {!team.error && <ChipStatusRow chipsUsed={team.chipsUsed ?? []} gameweek={team.gameweek} />}
+
       {team.error ? (
         <div className="section">
           {team.noSnapshotYet && (team.teamName || team.managerName) && (
@@ -343,32 +363,7 @@ export default async function Dashboard() {
           </div>
 
           <div className="content">
-            <div className="pitch-card">
-              <div className="pitch-card-header">Your team — gameweek {team.gameweek}</div>
-              <div className="pitch">
-                {POSITION_ORDER.map((pos) => {
-                  const players = starters.filter((p) => p.position === pos);
-                  if (players.length === 0) return null;
-                  return (
-                    <div key={pos} className="pitch-row">
-                      {players.map((p) => (
-                        <Shirt key={p.name} player={p} />
-                      ))}
-                    </div>
-                  );
-                })}
-              </div>
-              {bench.length > 0 && (
-                <div className="bench-strip">
-                  <p className="bench-label">Substitutes</p>
-                  <div className="bench-row">
-                    {bench.map((p) => (
-                      <Shirt key={p.name} player={p} bench />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            <SquadView starters={starters} bench={bench} gameweek={team.gameweek} />
 
             <div className="sidebar">
               {leagues.leagues?.map((league) => (
