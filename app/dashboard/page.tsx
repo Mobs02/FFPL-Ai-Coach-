@@ -354,7 +354,7 @@ export default async function Dashboard() {
             </div>
             <div>
               <p className="stat-label">Overall rank</p>
-              <p className="stat-value">{team.overallRank.toLocaleString()}</p>
+              <p className="stat-value">{team.overallRank != null ? team.overallRank.toLocaleString() : "—"}</p>
             </div>
             <div>
               <p className="stat-label">Total points</p>

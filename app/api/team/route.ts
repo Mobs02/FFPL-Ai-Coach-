@@ -15,7 +15,17 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
 
-  const { data: manager } = await supabase.from("managers").select("id, fpl_manager_id, chips_used").eq("id", user.id).maybeSingle();
+  const { data: manager, error: managerError } = await supabase
+    .from("managers")
+    .select("id, fpl_manager_id, chips_used")
+    .eq("id", user.id)
+    .maybeSingle();
+  // A real query failure (e.g. a column referenced here that a pending
+  // migration hasn't added yet) must not be treated the same as "this
+  // manager genuinely doesn't exist" — the former was silently producing a
+  // malformed response with none of the fields the dashboard expects,
+  // which crashed the page rather than showing a clear error.
+  if (managerError) return NextResponse.json({ error: "Something went wrong loading your team. Please try again shortly." }, { status: 500 });
   if (!manager) return NextResponse.json({ needsOnboarding: true }, { status: 404 });
 
   const { data: snapshot } = await supabase
