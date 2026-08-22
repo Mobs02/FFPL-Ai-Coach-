@@ -169,18 +169,18 @@ header.app-header {
 .pitch-row { display: flex; justify-content: space-evenly; align-items: flex-start; position: relative; z-index: 1; }
 .shirt { width: 78px; text-align: center; position: relative; }
 .jersey {
-  width: 40px; height: 40px; margin: 0 auto 4px;
+  width: 48px; height: 48px; margin: 0 auto 4px;
   border-radius: 50%; background: #e9e3ec;
   border: 1.5px solid rgba(255,255,255,0.7);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
 }
-.jersey svg { width: 26px; height: 26px; color: #a892b0; }
+.jersey svg { width: 30px; height: 30px; color: #a892b0; }
 .jersey.gk { background: #eef1f4; }
 .jersey.gk svg { color: #9aa5ad; }
 .player-photo {
-  width: 40px; height: 40px; margin: 0 auto 4px;
-  border-radius: 50%; object-fit: cover; object-position: 50% 20%; display: block;
+  width: 48px; height: 48px; margin: 0 auto 4px;
+  border-radius: 50%; object-fit: cover; object-position: 50% 8%; display: block;
   background: var(--purple);
   border: 1.5px solid rgba(255,255,255,0.7);
 }
