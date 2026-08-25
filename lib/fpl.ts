@@ -1,3 +1,4 @@
+import "server-only";
 import { supabase } from "./supabase"; // needed by backfillLastSeasonPoints below
 
 const FPL_BASE = "https://fantasy.premierleague.com/api";

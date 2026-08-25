@@ -42,11 +42,14 @@ export default function ResetPassword() {
           label="New password"
           type="password"
           required
-          minLength={6}
+          minLength={8}
           placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <p style={{ fontSize: 11.5, color: "#6b5a70", margin: "-8px 0 14px" }}>
+          At least 8 characters, with an uppercase letter, a lowercase letter, a number, and a symbol.
+        </p>
         {error && <AuthError message={error} />}
         <AuthButton type="submit" loading={loading} loadingText="Updating…">
           Update password

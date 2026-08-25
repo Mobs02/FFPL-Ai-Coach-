@@ -1,3 +1,4 @@
+import "server-only";
 import { Resend } from "resend";
 
 const FROM = "SquadScout AI <noreply@squadscoutai.com>";

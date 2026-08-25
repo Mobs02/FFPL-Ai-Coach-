@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# graphify — generated architecture map; this is a public repo, so this stays
+# local rather than becoming a ready-made recon document for anyone browsing it
+/graphify-out/

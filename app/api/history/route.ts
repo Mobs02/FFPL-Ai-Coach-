@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { serverErrorResponse } from "@/lib/api-error";
 
 export async function GET() {
   const supabase = await getSupabaseServerClient();
@@ -12,6 +13,6 @@ export async function GET() {
     .eq("manager_id", user.id)
     .order("captured_at", { ascending: true });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return serverErrorResponse("history", error);
   return NextResponse.json({ history: data });
 }

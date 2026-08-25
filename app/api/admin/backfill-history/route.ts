@@ -3,10 +3,10 @@
 // run once a season.
 import { NextResponse } from "next/server";
 import { getBootstrap, backfillLastSeasonPoints } from "@/lib/fpl";
+import { isValidCronSecret } from "@/lib/cron-auth";
 
 export async function GET(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isValidCronSecret(request.headers.get("authorization"))) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
   const bootstrap = await getBootstrap();

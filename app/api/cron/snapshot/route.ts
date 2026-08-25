@@ -3,6 +3,7 @@ import { getEntry, getEntryHistory, getEntryPicks, findManagerInLeague, getBoots
 import { supabase } from "@/lib/supabase";
 import { sendDeadlineReminder } from "@/lib/resend";
 import { generateAiInsight } from "@/lib/ai-insight";
+import { isValidCronSecret } from "@/lib/cron-auth";
 
 type Manager = { id: string; fpl_manager_id: number; league_ids: number[] };
 
@@ -182,8 +183,7 @@ async function generateMissingAiInsights(managers: Manager[], currentEvent: numb
 }
 
 export async function GET(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isValidCronSecret(request.headers.get("authorization"))) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
