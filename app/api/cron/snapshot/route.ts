@@ -37,6 +37,12 @@ async function pollAndSnapshot(manager: Manager, bootstrap: any, currentEvent: n
 
   // upsert, not insert — every poll for the same manager+gameweek updates one
   // row in place rather than adding a new row every 15 minutes.
+  // captured_at MUST be set explicitly here: its `default now()` only fires
+  // on a fresh INSERT, never on the ON CONFLICT DO UPDATE path an upsert
+  // takes for every poll after the first — omitting it left this column
+  // frozen at account-creation time forever, even though every other field
+  // (points, rank, squad) was being correctly refreshed every poll. That
+  // made the dashboard's "Updated X ago" measure account age, not staleness.
   await supabase.from("gameweek_snapshots").upsert({
     manager_id: manager.id,
     season: CURRENT_SEASON,
@@ -46,6 +52,7 @@ async function pollAndSnapshot(manager: Manager, bootstrap: any, currentEvent: n
     overall_rank: entry.summary_overall_rank,
     free_transfers: freeTransfers,
     squad_json: buildSquad(bootstrap, picks),
+    captured_at: new Date().toISOString(),
   }, { onConflict: "manager_id,gameweek,season" });
 
   // One row per league this manager is in.

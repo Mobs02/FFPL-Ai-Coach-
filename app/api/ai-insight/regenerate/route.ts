@@ -16,7 +16,7 @@ export async function POST() {
   // read "not on cooldown" before either write lands), so a request-level
   // limiter closes that gap too.
   if (!checkRateLimit(`regenerate:${user.id}`, { max: 2, windowMs: 10_000 })) {
-    return NextResponse.json({ error: "You can regenerate once per hour." }, { status: 429 });
+    return NextResponse.json({ error: "You can regenerate once every 24 hours." }, { status: 429 });
   }
 
   const { data: manager } = await supabase
@@ -26,8 +26,8 @@ export async function POST() {
     .maybeSingle();
   if (!manager) return NextResponse.json({ error: "Link your FPL team first" }, { status: 404 });
 
-  if (manager.last_manual_regenerate_at && Date.now() - new Date(manager.last_manual_regenerate_at).getTime() < 60 * 60 * 1000) {
-    return NextResponse.json({ error: "You can regenerate once per hour." }, { status: 429 });
+  if (manager.last_manual_regenerate_at && Date.now() - new Date(manager.last_manual_regenerate_at).getTime() < 24 * 60 * 60 * 1000) {
+    return NextResponse.json({ error: "You can regenerate once every 24 hours." }, { status: 429 });
   }
 
   // Record the attempt before doing the actual work — if the AI call below

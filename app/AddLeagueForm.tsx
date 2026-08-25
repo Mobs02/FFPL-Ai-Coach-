@@ -32,11 +32,13 @@ export function AddLeagueForm() {
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%" }}>
       <div style={{ display: "flex", gap: 8 }}>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           required
           placeholder="Add a league ID"
           value={leagueId}
-          onChange={(e) => setLeagueId(e.target.value)}
+          onChange={(e) => setLeagueId(e.target.value.replace(/\D/g, ""))}
         />
         <button type="submit" className="btn-secondary" disabled={loading}>
           {loading ? "Adding…" : "Add"}
