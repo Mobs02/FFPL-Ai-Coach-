@@ -401,6 +401,11 @@ export default async function Dashboard() {
         <div className="add-league-row">
           <AddLeagueForm />
         </div>
+        <p className="helper-box" style={{ marginTop: 8 }}>
+          Use the <b>league ID</b> (numbers only), not the invite code. Open your league on
+          fantasy.premierleague.com and copy the number from the web address — e.g.
+          fantasy.premierleague.com/leagues/<b>1234567</b>/standings/c.
+        </p>
           </div>
         </div>
       </main>
