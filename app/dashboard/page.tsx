@@ -75,10 +75,13 @@ const CHIP_TYPES: { key: string; label: string }[] = [
   { key: "3xc", label: "Triple Captain" },
 ];
 
-function ChipStatusRow({ chipsUsed, gameweek }: { chipsUsed: ChipUsed[]; gameweek: number }) {
+function ChipStatusRow({ chipsUsed, gameweek, freeTransfers }: { chipsUsed: ChipUsed[]; gameweek: number; freeTransfers: number }) {
   const inSecondHalf = gameweek >= CHIP_HALF_BOUNDARY_EVENT;
   return (
     <div className="chip-status-row">
+      <span className="chip-status available">
+        {freeTransfers} free transfer{freeTransfers === 1 ? "" : "s"}
+      </span>
       {CHIP_TYPES.map((chip) => {
         const used = chipsUsed.some(
           (c) => c.name === chip.key && (inSecondHalf ? c.event >= CHIP_HALF_BOUNDARY_EVENT : c.event < CHIP_HALF_BOUNDARY_EVENT),
@@ -308,7 +311,6 @@ export default async function Dashboard() {
             {!team.error && (
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <span className="info-chip">Gameweek {team.gameweek}</span>
-                <span className="info-chip">{team.freeTransfers} free transfer{team.freeTransfers === 1 ? "" : "s"}</span>
                 {(() => {
                   const { label, stale } = dataFreshness(team.capturedAt);
                   return (
@@ -321,7 +323,7 @@ export default async function Dashboard() {
             )}
           </div>
 
-          {!team.error && <ChipStatusRow chipsUsed={team.chipsUsed ?? []} gameweek={team.gameweek} />}
+          {!team.error && <ChipStatusRow chipsUsed={team.chipsUsed ?? []} gameweek={team.gameweek} freeTransfers={team.freeTransfers} />}
 
       {team.error ? (
         <div className="section">
