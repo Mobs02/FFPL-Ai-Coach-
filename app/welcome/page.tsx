@@ -1,31 +1,8 @@
-"use client";
-
-import { motion } from "motion/react";
 import { PhoneShowcase } from "./PhoneShowcase";
 import { SpiralSegment } from "./SpiralConnector";
 import { SiteFooter } from "../SiteFooter";
 import { SwapIcon, TargetIcon, GridIcon, EyeIcon, ArmbandIcon, PulseIcon, ShieldCheckIcon } from "./FeatureIcons";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 28 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.6, ease: "easeOut" as const },
-};
-
-function Reveal({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
-  return (
-    <motion.div
-      className={className}
-      initial={fadeUp.initial}
-      whileInView={fadeUp.whileInView}
-      viewport={fadeUp.viewport}
-      transition={{ ...fadeUp.transition, delay }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+import { Reveal } from "./Reveal";
 
 const FEATURES = [
   {
@@ -84,7 +61,7 @@ export default function Welcome() {
     <div className="wp">
       <nav className="wp-nav">
         <div className="wp-nav-brand">
-          <img src="/logo-text-blue-transparent.png" alt="SquadScout AI" />
+          <img src="/logo-text-blue-transparent.webp" alt="SquadScout AI" width={179} height={34} />
         </div>
         <div className="wp-nav-links">
           <a className="wp-link" href="/sign-in">
@@ -97,8 +74,8 @@ export default function Welcome() {
       </nav>
 
       <header className="wp-hero">
-        <img src="/home-page-banner.png" alt="" className="wp-hero-banner" />
-        <img src="/logo-text-blue-transparent.png" alt="SquadScout AI" className="wp-hero-logo" />
+        <img src="/home-page-banner.webp" alt="" className="wp-hero-banner" />
+        <img src="/logo-text-blue-transparent.webp" alt="SquadScout AI" className="wp-hero-logo" width={340} height={65} />
         <span className="wp-hero-eyebrow">AI-powered fantasy football scout</span>
         <h1 className="wp-hero-title">
           Stop guessing. <span className="accent">Start scouting.</span>
@@ -173,7 +150,7 @@ export default function Welcome() {
       <section className="wp-section">
         <SpiralSegment path="M 90 0 C 260 90, 330 260, 340 400" />
         <Reveal className="wp-section-head">
-          <img src="/logo-stacked-white.png" alt="SquadScout AI" className="wp-section-logo" />
+          <img src="/logo-stacked-white.webp" alt="SquadScout AI" className="wp-section-logo" width={200} height={159} />
           <span className="wp-kicker">How it works</span>
           <h2 className="wp-h2">Four steps, then it runs itself</h2>
         </Reveal>
@@ -205,7 +182,7 @@ export default function Welcome() {
                 <header className="app-header">
                   <div className="navrow">
                     <div className="brand">
-                      <img src="/logo-icon.png" alt="" className="brand-mark" />
+                      <img src="/logo-icon.webp" alt="" className="brand-mark" />
                       SquadScout AI
                     </div>
                     <div className="gw-pill">

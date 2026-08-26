@@ -14,12 +14,12 @@ export function AuthCard({
     <>
       <SiteNav />
       <main className="auth-page">
-        <img src="/home-page-banner.png" alt="" className="auth-bg-banner" />
+        <img src="/home-page-banner.webp" alt="" className="auth-bg-banner" />
         <div className="auth-card-wrap">
         <div className="center-card">
           {stepTag && <span className="step-tag">{stepTag}</span>}
           <div className="brand-row">
-            <img src="/logo-icon.png" alt="" className="brand-mark" />
+            <img src="/logo-icon.webp" alt="" className="brand-mark" />
             <div className="brand-name">SquadScout AI</div>
           </div>
           {heading && (
@@ -41,7 +41,7 @@ export function AuthInput({
   return (
     <div>
       <div className="field-label">{label}</div>
-      <input {...props} className="field" />
+      <input aria-label={label} {...props} className="field" />
     </div>
   );
 }

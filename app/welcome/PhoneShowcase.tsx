@@ -9,7 +9,7 @@ function DashboardPhoneContent() {
       <header className="app-header">
         <div className="navrow">
           <div className="brand">
-            <img src="/logo-icon.png" alt="" className="brand-mark" />
+            <img src="/logo-icon.webp" alt="" className="brand-mark" />
             SquadScout AI
           </div>
           <div className="gw-pill">GW 7</div>
@@ -73,13 +73,13 @@ function SignInPhoneContent() {
     <div style={{ padding: "40px 0" }}>
       <div className="center-card">
         <div className="brand-row">
-          <img src="/logo-icon.png" alt="" className="brand-mark" />
+          <img src="/logo-icon.webp" alt="" className="brand-mark" />
           <div className="brand-name">SquadScout AI</div>
         </div>
         <div className="field-label">Email</div>
-        <input className="field" readOnly value="you@email.com" />
+        <input className="field" readOnly aria-label="Email" value="you@email.com" />
         <div className="field-label">Password</div>
-        <input className="field" readOnly value="••••••••" />
+        <input className="field" readOnly aria-label="Password" value="••••••••" />
         <button className="btn-primary" type="button">
           Sign in
         </button>

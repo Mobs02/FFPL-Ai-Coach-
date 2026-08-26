@@ -16,7 +16,7 @@ export function AppNav({ active }: { active: "dashboard" | "settings" }) {
   return (
     <nav className="wp-nav site-nav">
       <a href="/dashboard" className="wp-nav-brand auth-nav-brand">
-        <img src="/logo-stacked-white.png" alt="SquadScout AI" />
+        <img src="/logo-stacked-white.webp" alt="SquadScout AI" width={66} height={52} />
       </a>
       <div className="wp-nav-links">
         {active !== "dashboard" && (

@@ -2,7 +2,7 @@ export function SiteNav() {
   return (
     <nav className="wp-nav site-nav">
       <div className="wp-nav-brand auth-nav-brand">
-        <img src="/logo-stacked-white.png" alt="SquadScout AI" />
+        <img src="/logo-stacked-white.webp" alt="SquadScout AI" width={66} height={52} />
       </div>
       <div className="wp-nav-links">
         <a className="wp-link" href="/">
