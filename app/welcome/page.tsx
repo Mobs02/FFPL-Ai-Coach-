@@ -1,8 +1,10 @@
-import { PhoneShowcase } from "./PhoneShowcase";
-import { SpiralSegment } from "./SpiralConnector";
 import { SiteFooter } from "../SiteFooter";
 import { SwapIcon, TargetIcon, GridIcon, EyeIcon, ArmbandIcon, PulseIcon, ShieldCheckIcon } from "./FeatureIcons";
-import { Reveal } from "./Reveal";
+// motion (~44KB gzip) is only needed for these three, and none of them are
+// above the fold, so deferring them (see DeferredMotion.tsx) keeps it out of
+// initial hydration instead of blocking first paint/interactive for JS
+// nothing visible needs yet.
+import { PhoneShowcase, SpiralSegment, Reveal } from "./DeferredMotion";
 
 const FEATURES = [
   {
@@ -74,7 +76,14 @@ export default function Welcome() {
       </nav>
 
       <header className="wp-hero">
-        <img src="/home-page-banner.webp" alt="" className="wp-hero-banner" />
+        <img
+          src="/home-page-banner.webp"
+          srcSet="/home-page-banner-mobile.webp 750w, /home-page-banner.webp 1600w"
+          sizes="100vw"
+          alt=""
+          className="wp-hero-banner"
+          fetchPriority="high"
+        />
         <img src="/logo-text-blue-transparent.webp" alt="SquadScout AI" className="wp-hero-logo" width={340} height={65} />
         <span className="wp-hero-eyebrow">AI-powered fantasy football scout</span>
         <h1 className="wp-hero-title">
