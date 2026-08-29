@@ -202,15 +202,11 @@ function AiCard({
         groups.map((g, i) => (
           <div className="ai-group" key={i}>
             {g.label && <p className="ai-group-label">{g.label}</p>}
-            {g.items.length > 1 ? (
-              <ul className="ai-group-list">
-                {g.items.map((item, j) => (
-                  <li key={j}>{item}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>{g.items[0]}</p>
-            )}
+            <ul className="ai-group-list">
+              {g.items.map((item, j) => (
+                <li key={j}>{item}</li>
+              ))}
+            </ul>
           </div>
         ))
       ) : (
