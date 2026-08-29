@@ -157,17 +157,24 @@ const AI_TAG_LABELS: Record<string, string> = {
   CAPTAIN: "Captain & vice",
 };
 
-function AiParagraph({ line }: { line: string }) {
-  const match = line.match(/^([A-Z]+):\s*(.+)$/);
-  const label = match ? AI_TAG_LABELS[match[1]] : null;
-  if (label) {
-    return (
-      <p>
-        <b>{label}:</b> {match![2]}
-      </p>
-    );
+// Consecutive lines sharing the same tag (e.g. up to 5 TRANSFER: lines in a
+// row) get merged into one group so they render as a bulleted list under a
+// single heading, instead of each repeating its own bold "Transfer option:"
+// prefix — that repetition was the actual source of the wall-of-text look.
+function groupAiParagraphs(paragraphs: string[]) {
+  const groups: { label: string | null; items: string[] }[] = [];
+  for (const line of paragraphs) {
+    const match = line.match(/^([A-Z]+):\s*(.+)$/);
+    const label = match ? AI_TAG_LABELS[match[1]] ?? null : null;
+    const body = match ? match[2] : line;
+    const last = groups[groups.length - 1];
+    if (last && last.label === label) {
+      last.items.push(body);
+    } else {
+      groups.push({ label, items: [body] });
+    }
   }
-  return <p>{line}</p>;
+  return groups;
 }
 
 function AiCard({
@@ -182,21 +189,35 @@ function AiCard({
   feedback: string | null;
 }) {
   const paragraphs = (content ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  const groups = groupAiParagraphs(paragraphs);
   return (
     <div className="ai-card">
       <span className="ai-tag">AI suggestion</span>
       {headline && (
-        <p>
+        <p className="ai-headline">
           <b>{headline}</b>
         </p>
       )}
-      {paragraphs.length > 0 ? (
-        paragraphs.map((line, i) => <AiParagraph key={i} line={line} />)
+      {groups.length > 0 ? (
+        groups.map((g, i) => (
+          <div className="ai-group" key={i}>
+            {g.label && <p className="ai-group-label">{g.label}</p>}
+            {g.items.length > 1 ? (
+              <ul className="ai-group-list">
+                {g.items.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>{g.items[0]}</p>
+            )}
+          </div>
+        ))
       ) : (
         <p>No recommendation yet — click below to generate one for this gameweek.</p>
       )}
-      <RegenerateButton hasRecommendation={paragraphs.length > 0} />
-      {id != null && paragraphs.length > 0 && <AiFeedback recommendationId={id} initialFeedback={feedback} />}
+      <RegenerateButton hasRecommendation={groups.length > 0} />
+      {id != null && groups.length > 0 && <AiFeedback recommendationId={id} initialFeedback={feedback} />}
       <p className="ai-disclaimer">
         Make these moves yourself on the{" "}
         <a href="https://fantasy.premierleague.com/" target="_blank" rel="noopener noreferrer">

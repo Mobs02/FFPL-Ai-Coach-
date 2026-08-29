@@ -220,6 +220,17 @@ header.app-header {
 .ai-card p { font-size: 13px; line-height: 1.55; margin: 0 0 8px; color: #4a3a1a; }
 .ai-card p:last-child { margin-bottom: 0; }
 .ai-card b { color: var(--purple); }
+.ai-headline { margin-bottom: 12px !important; }
+.ai-group { margin-bottom: 14px; }
+.ai-group:last-child { margin-bottom: 0; }
+.ai-group-label {
+  font-size: 11px; font-weight: 700; color: var(--purple);
+  text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 4px;
+}
+.ai-group-list { margin: 0; padding-left: 18px; }
+.ai-group-list li { font-size: 13px; line-height: 1.55; color: #4a3a1a; margin-bottom: 6px; }
+.ai-group-list li:last-child { margin-bottom: 0; }
+.ai-group-list li::marker { color: var(--purple); }
 .ai-disclaimer { font-size: 11.5px; color: #8a7a52; border-top: 1px solid #f2d9a8; padding-top: 10px; margin-top: 4px; }
 .ai-disclaimer a { color: var(--purple); font-weight: 600; text-decoration: underline; }
 .ai-feedback {
