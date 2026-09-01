@@ -177,6 +177,16 @@ function groupAiParagraphs(paragraphs: string[]) {
   return groups;
 }
 
+// Parses the leading **verdict** the prompt is instructed to always lead
+// each recommendation with (e.g. "**Sell Thiago for De Cuyper**, frees...")
+// into a bold span, so the specific pick is scannable without reading the
+// full reasoning sentence.
+function renderWithBold(text: string): React.ReactNode {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) => (i % 2 === 1 ? <b key={i}>{part}</b> : part));
+}
+
 function AiCard({
   id,
   headline,
@@ -204,7 +214,7 @@ function AiCard({
             {g.label && <p className="ai-group-label">{g.label}</p>}
             <ul className="ai-group-list">
               {g.items.map((item, j) => (
-                <li key={j}>{item}</li>
+                <li key={j}>{renderWithBold(item)}</li>
               ))}
             </ul>
           </div>

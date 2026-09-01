@@ -120,7 +120,12 @@ export async function generateAiInsight({
       "task, so do all of your comparing and weighing of options silently and privately, then " +
       "write only the conclusion — never think out loud in the response. Each recommendation " +
       "must read as 1-2 short, direct sentences stating the pick and the one or two reasons " +
-      "that matter most. Never write phrases like 'wait,' 'actually,' 'instead,' 'let me " +
+      "that matter most. Start every recommendation with the core verdict wrapped in double " +
+      "asterisks so it renders bold, 3-8 words, before any reasoning — e.g. '**Sell Thiago " +
+      "for De Cuyper**, frees £6.9m...' or '**Start Anderson over Cook**, better underlying " +
+      "numbers...' or '**Captain Haaland, vice João Pedro**, ...'. Only ever use double " +
+      "asterisks for that one leading verdict phrase — never anywhere else in the text. " +
+      "Never write phrases like 'wait,' 'actually,' 'instead,' 'let me " +
       "reconsider,' or any other sign of narrating a change of mind, and never phrase cost " +
       "math as a question you then answer (e.g. never write 'does this cover it? No —' or " +
       "'is this affordable? Yes —') — state the cost math result directly as a fact the " +
